@@ -22,3 +22,12 @@ of the area of a television screen, assuming standard
 viewing distances of ≥2m(∼9 feet).
 
 [Source](https://www.epilepsy.com/sites/core/files/atoms/files/Epilepsia%20vol%2046%20issue%209%20Photosensitivity.pdf)
+
+Risk factors for screens:
+
+* the brightness of the flashing
+* the contrast with background lighting
+* the distance between the viewer and the light source
+* the wavelength of the light
+* whether a person’s eyes are open or closed at the time
+* [Source](https://www.onlineflashtest.com/PhotosensitiveEpilepsy.aspx)
