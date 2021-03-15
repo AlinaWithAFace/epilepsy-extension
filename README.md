@@ -8,4 +8,4 @@ Potential Triggers
 * Natural light, such as sunlight, especially when shimmering off water, flickering through trees or through the slats of Venetian blinds.
 * Certain visual patterns, especially stripes of contrasting colors.
 * Some people wonder whether flashing lights on the top of buses or emergency vehicles may trigger seizures in people with photosensitive epilepsy too.
-* https://www.epilepsy.com/learn/triggers-seizures/photosensitivity-and-seizures
+* [Source](https://www.epilepsy.com/learn/triggers-seizures/photosensitivity-and-seizures)
