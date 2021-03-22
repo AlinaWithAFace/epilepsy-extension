@@ -49,6 +49,8 @@ def generate_video():
 
     colors[0:1] = sorted(colors[0:1])
     # sort the first two, so we avoid having things like green-white and also white-green
+    # TODO it doesn't actually work and idk why, we still get green-white and white-green, not a huge deal tho
+    # might be how the sort works with tuples?
 
     fourcc = VideoWriter_fourcc(*'MP42')
 
