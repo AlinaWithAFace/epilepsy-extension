@@ -21,8 +21,17 @@ FPS = 24
 radius = 150
 paint_h = int(height / 2)
 
+seconds = 0
+# randomly initialized between min_length and max_length in generate_video
 min_length = 5
 max_length = 10
+
+length_of_flash = 1
+# frame length of flash, unused but could be a variable
+# apparently there's something like a 3 second window if it's too slow? unsure
+
+number_of_colors = 2
+# unused, could use multi-color flashes beyond 2
 
 """
 We're storing colors in tuples of (colorcode, string), so we can easily make filenames with the strings dynamically
