@@ -31,3 +31,23 @@ Risk factors for screens:
 * the wavelength of the light
 * whether a person’s eyes are open or closed at the time
 * [Source](https://www.onlineflashtest.com/PhotosensitiveEpilepsy.aspx)
+
+Ratings for movies that might have triggers in them: 
+ * https://moviehealthcommunity.tumblr.com/
+
+> Results: A flash is a potential hazard if it has luminance ≥20
+> cd/m2, occurs at a frequency of ≥3 Hz, and occupies a solid visual angle of ≥0.006 steradians (∼10% of the central visual field
+> or 25% of screen area at typical viewing distances). A transition
+> to or from saturated red also is considered a risk. A pattern with
+> the potential for provoking seizures contains clearly discernible
+> stripes, numbering more than five light–dark pairs of stripes in
+> any orientation. When the light–dark stripes of any pattern collectively subtend at the eye from the minimal-expected viewing
+> distance a solid angle of >0.006 steradians, the luminance of the
+> lightest stripe is >50 cd/m2, and the pattern is presented for ≥0.5
+> s, then the pattern should display no more than five light–dark
+> pairs of stripes, if the stripes change direction, oscillate, flash,
+> or reverse in contrast; if the pattern is unchanging or smoothly
+> drifting in one direction, no more than eight stripes. These principles are easier to apply in the case of fixed media, for example,
+> a prerecorded TV show, which can be analyzed frame-by-frame,
+> as compared with interactive media.
+> - [Source](https://www.epilepsy.com/sites/core/files/atoms/files/Epilepsia%20vol%2046%20issue%209%20Photosensitivity.pdf)
