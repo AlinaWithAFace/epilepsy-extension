@@ -51,3 +51,12 @@ Ratings for movies that might have triggers in them:
 > a prerecorded TV show, which can be analyzed frame-by-frame,
 > as compared with interactive media.
 > - [Source](https://www.epilepsy.com/sites/core/files/atoms/files/Epilepsia%20vol%2046%20issue%209%20Photosensitivity.pdf)
+
+
+Notes/Ideas
+---
+
+* Possibly after processing any video add some sort of filter for the relevant portions of the video so it's still watchable?
+  * eg a black-white filter that maybe brings most of the colors to grey to lower any contrast? 
+* Collect user-tagged triggers for videos, eg timestamp 1 - timestamp 2 is a likely trigger
+  * Add to database for further model training
