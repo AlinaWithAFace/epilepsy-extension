@@ -40,6 +40,14 @@ colors = [
     red, blue, green, black, white
 ]
 
+# Not quite sure how to dynamically make it stripes or solids yet but here's some stubs
+
+solid = "solid"
+vertical_stripes = "vertical_stripes"
+horizontal_stripes = "horizontal_stripes"
+
+patterns = [solid, vertical_stripes, horizontal_stripes]
+
 
 def generate_video():
     seconds = random.randint(min_length, max_length)
@@ -54,7 +62,7 @@ def generate_video():
 
     fourcc = VideoWriter_fourcc(*'MP42')
 
-    filename = './data/{}-{}-{}.avi'.format(colors[1][1], colors[0][1], seconds)
+    filename = './synthetic_data/{}-{}-{}.avi'.format(colors[1][1], colors[0][1], seconds)
     print(filename)
     video = VideoWriter(filename, fourcc, float(FPS), (width, height))
 
