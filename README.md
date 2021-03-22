@@ -60,3 +60,5 @@ Notes/Ideas
   * eg a black-white filter that maybe brings most of the colors to grey to lower any contrast? 
 * Collect user-tagged triggers for videos, eg timestamp 1 - timestamp 2 is a likely trigger
   * Add to database for further model training
+* For user testing, ask people on the epilepsy subreddit?
+  * Eg here's a thread with a few people claiming photosensetivity https://www.reddit.com/r/Epilepsy/comments/l5o436/tiktok_just_added_this_popup_i_know_its_not_many/
