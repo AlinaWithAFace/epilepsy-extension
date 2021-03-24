@@ -1,32 +1,41 @@
+"""Simple server. Right now just has a single url for screening videos"""
+
 from typing import TypedDict, Tuple, List
 import pafy
 import cv2
 from flask import Flask, request
+from http import HTTPStatus
 
 app = Flask(__name__)
 
 
 class ScreenResults(TypedDict):
+    """Return type for screen-video route"""
     message: str
     risk_segements: List[Tuple[int, int]]
 
 
+# TODO: right now this basically does nothing, it just checks if the link is a
+# link to YouTube video and then reads it into an OpenCV video object
 @app.route('/screen-video', methods=['POST'])
-def show_user_profile() -> ScreenResults:
+def show_user_profile() -> Tuple[ScreenResults, int]:
+    """Screens
+
+    Expects a request with a body element `url`, returns a `ScreenResults`
+    value and an HTTP status code
+    """
     body = request.get_json()
     if 'url' not in body:
-        return {"error": "Missing url"}, 400
+        return {"error": "Missing url"}, HTTPStatus.BAD_REQUEST
     watch_url = request.get_json()['url']
     try:
         vid = pafy.new(watch_url)
         vid_url = vid.getbestvideo(preftype="mp4").url
         capture = cv2.VideoCapture(vid_url)
     except ValueError:
-        return {"error": "Url must be a YouTube video"}, 400
-
-    print(capture)
+        return {"error": "Url must be a YouTube video"}, HTTPStatus.BAD_REQUEST
 
     return {
         "message": ("Classifier has not been implemented"),
-        "risk_segements": [(1, 2), (5, 6)]
-    }, 201
+        "risk_segements": []
+    }, HTTPStatus.CREATED
