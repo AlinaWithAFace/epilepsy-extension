@@ -1,6 +1,5 @@
 """Simple server. Right now just has a single url for screening videos"""
 
-from typing import TypedDict, Tuple, List
 import pafy
 import cv2
 from flask import Flask, request
@@ -9,16 +8,10 @@ from http import HTTPStatus
 app = Flask(__name__)
 
 
-class ScreenResults(TypedDict):
-    """Return type for screen-video route"""
-    message: str
-    risk_segements: List[Tuple[int, int]]
-
-
 # TODO: right now this basically does nothing, it just checks if the link is a
 # link to YouTube video and then reads it into an OpenCV video object
 @app.route('/screen-video', methods=['POST'])
-def show_user_profile() -> Tuple[ScreenResults, int]:
+def show_user_profile():
     """Screens
 
     Expects a request with a body element `url`, returns a `ScreenResults`
