@@ -12,7 +12,7 @@ app = Flask(__name__)
 # link to YouTube video and then reads it into an OpenCV video object
 @app.route('/screen-video', methods=['POST'])
 def show_user_profile():
-    """Screens
+    """Screen video for potential PSE triggeres
 
     Expects a request with a body element `url`, returns a `ScreenResults`
     value and an HTTP status code
