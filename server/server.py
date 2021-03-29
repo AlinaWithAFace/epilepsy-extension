@@ -20,7 +20,7 @@ def show_user_profile():
     body = request.get_json()
 
     if "url" not in body:
-        return {"error": "Missing url"}, HTTPStatus.BAD_REQUEST
+        return {"error": "Missing URL"}, HTTPStatus.BAD_REQUEST
 
     watch_url = request.get_json()["url"]
 
@@ -29,9 +29,9 @@ def show_user_profile():
         vid_url = vid.getbestvideo(preftype="mp4").url
         capture = cv2.VideoCapture(vid_url)
     except ValueError:
-        return {"error": "Url must be a YouTube video"}, HTTPStatus.BAD_REQUEST
+        return {"error": "URL must be a YouTube video"}, HTTPStatus.BAD_REQUEST
 
     return {
-        "message": ("Classifier has not been implemented"),
+        "message": "Classifier has not been implemented",
         "risk_segements": []
     }, HTTPStatus.CREATED
