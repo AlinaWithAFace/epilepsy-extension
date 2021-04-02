@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
 dir=$(dirname "$0")
-normal="$(tput sgr0)"
-red="$(tput bold)$(tput setaf 1)"
-green="$(tput bold)$(tput setaf 2)"
 
 if lsof -Pi :5000 -sTCP:LISTEN -t >/dev/null ; then
     for file in $(ls $dir/*.json); do
@@ -12,9 +9,9 @@ if lsof -Pi :5000 -sTCP:LISTEN -t >/dev/null ; then
             -H "Content-Type: application/json" \
             -d @$file)
         result=$(test $response = $(cat $file.expected) \
-            && echo "${green}Passed${normal}" || echo "${green}Failed${normal}")
+            && echo "Passed" || echo "Failed")
         printf "%-40s%s\n" $file $result
     done
 else
-    echo "${red}Server Not Running${normal}" 1>&2
+    echo "Server Not Running" 1>&2
 fi
