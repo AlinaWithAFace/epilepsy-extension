@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+dir=$(dirname "$0")
+
+if lsof -Pi :5000 -sTCP:LISTEN -t >/dev/null ; then
+    for file in $(ls $dir/*.json); do
+        response=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST "http://127.0.0.1:5000/screen-video" \
+            -H "Content-Type: application/json" \
+            -d @$file)
+        result=$(test $response = $(cat $file.expected) \
+            && echo "Passed" || echo "Failed")
+        printf "%-40s%s\n" $file $result
+    done
+else
+    echo "Server Not Running" 1>&2
+fi
