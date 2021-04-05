@@ -50,7 +50,7 @@ def show_user_profile():
                     cur.execute(
                         """
                         INSERT INTO Warnings (video, start, end)
-                        VALUES (?, ?, ?);
+                        VALUES (?, ?, ?)
                         """, (watch_url, warning.start, warning.end))
                     con.commit()
         except:
