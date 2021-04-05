@@ -9,12 +9,10 @@ import random
 import cv2
 import numpy as np
 
-# from cv2 import VideoWriter, VideoWriter_fourcc
+random.seed(10)
+# manually set the RNG seed to avoid too much redundant generation
 
-# random.seed(10)
-# manually set the seed, for now, for uh testing
-
-number_of_videos = 1
+number_of_videos = 100
 
 width = 1280
 height = 720
@@ -49,108 +47,57 @@ colors = [
     red, blue, green, black, white
 ]
 
-# Not quite sure how to dynamically make it stripes or solids yet but here's some stubs
 
-solid = "solid"
-vertical_stripes = "vertical_stripes"
-horizontal_stripes = "horizontal_stripes"
-
-patterns = [solid, vertical_stripes, horizontal_stripes]
-pattern = 0  # the index of the pattern to use from the set in patterns
-
-
-def draw_stripes(frame, color1, color2):
-    # print(color1)
-    # print(color2)
-
-    # for i in range(0, 9):
-    #     if _ % 2 == 0:
-    #         cv2.rectangle(frame,
-    #                       (0, int(i * .1 * height)),
-    #                       (width, int(i + 1 * .1 * height)),
-    #                       color1,
-    #                       -1,
-    #                       8,
-    #                       0)
-    #     else:
-    #         cv2.rectangle(frame,
-    #                       (0, int(i * height)),
-    #                       (width, int(i + 1 * height)),
-    #                       color2,
-    #                       -1,
-    #                       8,
-    #                       0)
-
-    cv2.rectangle(frame,
-                  (0, int(0 * height)),
-                  (width, int(.1 * height)),
-                  colors[0][0],
-                  -1,
-                  8,
-                  0)
-    cv2.rectangle(frame,
-                  (0, int(.1 * height)),
-                  (width, int(.2 * height)),
-                  colors[1][0],
-                  -1,
-                  8,
-                  0)
-    cv2.rectangle(frame,
-                  (0, int(.2 * height)),
-                  (width, int(.3 * height)),
-                  colors[0][0],
-                  -1,
-                  8,
-                  0)
-    cv2.rectangle(frame,
-                  (0, int(.2 * height)),
-                  (width, int(.3 * height)),
-                  colors[1][0],
-                  -1,
-                  8,
-                  0)
-    cv2.rectangle(frame,
-                  (0, int(.3 * height)),
-                  (width, int(.4 * height)),
-                  colors[0][0],
-                  -1,
-                  8,
-                  0)
-    cv2.rectangle(frame,
-                  (0, int(.4 * height)),
-                  (width, int(.5 * height)),
-                  colors[1][0],
-                  -1,
-                  8,
-                  0)
-    cv2.rectangle(frame,
-                  (0, int(.5 * height)),
-                  (width, int(.6 * height)),
-                  colors[0][0],
-                  -1,
-                  8,
-                  0)
-    cv2.rectangle(frame,
-                  (0, int(.6 * height)),
-                  (width, int(.7 * height)),
-                  colors[1][0],
-                  -1,
-                  8,
-                  0)
-    cv2.rectangle(frame,
-                  (0, int(.7 * height)),
-                  (width, int(.8 * height)),
-                  colors[0][0],
-                  -1,
-                  8,
-                  0)
-    cv2.rectangle(frame,
-                  (0, int(.8 * height)),
-                  (width, int(.9 * height)),
-                  colors[1][0],
-                  -1,
-                  8,
-                  0)
+def draw_frame(frame, pattern, color1, color2):
+    """
+    :param frame:
+    :param pattern: solid, vertical_stripes, horizontal_stripes
+    :param color1:
+    :param color2:
+    :return:
+    """
+    if pattern == 1:
+        for i in range(0, 10):
+            h1 = (i * .1)
+            h2 = ((i + 1) * .1)
+            if i % 2 == 0:
+                cv2.rectangle(frame,
+                              (0, int(height * h1)),
+                              (width, int(height * h2)),
+                              color1,
+                              -1,
+                              8,
+                              0)
+            else:
+                cv2.rectangle(frame,
+                              (0, int(height * h1)),
+                              (width, int(height * h2)),
+                              color2,
+                              -1,
+                              8,
+                              0)
+    elif pattern == 2:
+        for i in range(0, 10):
+            w1 = (i * .1)
+            w2 = ((i + 1) * .1)
+            if i % 2 == 0:
+                cv2.rectangle(frame,
+                              (int(width * w1), 0),
+                              (int(width * w2), height),
+                              color1,
+                              -1,
+                              8,
+                              0)
+            else:
+                cv2.rectangle(frame,
+                              (int(width * w1), 0),
+                              (int(width * w2), height),
+                              color2,
+                              -1,
+                              8,
+                              0)
+    else:
+        frame[:, 0:width] = color1
 
     return frame
 
@@ -168,32 +115,22 @@ def generate_video():
 
     fourcc = cv2.VideoWriter_fourcc(*'MP42')
 
-    # filename = './synthetic_data/{}-{}-{}.avi'.format(colors[1][1], colors[0][1], seconds)
-    filename = "./data/test-video.avi"
+    pattern = random.randint(0, 2)
+
+    filename = './data/synthetic_data/{}-{}-{}-{}.avi'.format(pattern, colors[1][1], colors[0][1], seconds)
+    # filename = "./data/test-video.avi"
     print(filename)
     video = cv2.VideoWriter(filename, fourcc, float(FPS), (width, height))
 
-    # if pattern == 1:
     for _ in range(FPS * seconds):
         frame = np.zeros((height, width, 3), np.uint8)
 
-        video.write(frame)
+        if _ % 2 == 0:
+            frame = draw_frame(frame, pattern, colors[0][0], colors[1][0])
+        else:
+            frame = draw_frame(frame, pattern, colors[1][0], colors[0][0])
 
-        # frame = draw_stripes(frame, colors[0][0], colors[1][0])
-        frame = draw_stripes(frame, red[0], green[0])
-
         video.write(frame)
-    #
-    # else:
-    # for _ in range(FPS * seconds):
-    #     frame = np.zeros((height, width, 3), np.uint8)
-    #
-    #     if _ % 2 == 0:
-    #         frame[:, 0:width] = colors[0][0]
-    #     else:
-    #         frame[:, 0:width] = colors[1][0]
-    #
-    #     video.write(frame)
 
     video.release()
 
