@@ -8,12 +8,13 @@ import random
 
 import cv2
 import numpy as np
-from cv2 import VideoWriter, VideoWriter_fourcc
+
+# from cv2 import VideoWriter, VideoWriter_fourcc
 
 # random.seed(10)
 # manually set the seed, for now, for uh testing
 
-number_of_videos = 10
+number_of_videos = 1
 
 width = 1280
 height = 720
@@ -21,8 +22,7 @@ FPS = 24
 radius = 150
 paint_h = int(height / 2)
 
-seconds = 0
-# randomly initialized between min_length and max_length in generate_video
+# seconds = 0 # randomly initialized between min_length and max_length in generate_video
 min_length = 5
 max_length = 10
 
@@ -56,6 +56,7 @@ vertical_stripes = "vertical_stripes"
 horizontal_stripes = "horizontal_stripes"
 
 patterns = [solid, vertical_stripes, horizontal_stripes]
+pattern = 0  # the index of the pattern to use from the set in patterns
 
 
 def generate_video():
@@ -69,12 +70,35 @@ def generate_video():
     # TODO it doesn't actually work and idk why, we still get green-white and white-green, not a huge deal tho
     # might be how the sort works with tuples?
 
-    fourcc = VideoWriter_fourcc(*'MP42')
+    fourcc = cv2.VideoWriter_fourcc(*'MP42')
 
-    filename = './synthetic_data/{}-{}-{}.avi'.format(colors[1][1], colors[0][1], seconds)
+    # filename = './synthetic_data/{}-{}-{}.avi'.format(colors[1][1], colors[0][1], seconds)
+    filename = "./data/test-video.avi"
     print(filename)
-    video = VideoWriter(filename, fourcc, float(FPS), (width, height))
+    video = cv2.VideoWriter(filename, fourcc, float(FPS), (width, height))
 
+    # if pattern == 1:
+    #     for _ in range(FPS * seconds):
+    #         frame = np.zeros((height, width, 3), np.uint8)
+    #
+    #         x = (0, 0)
+    #         y = (1, 1)
+    #         cv2.rectangle(frame,
+    #                       x,
+    #                       y,
+    #                       colors[0][0],
+    #                       1,
+    #                       cv2.FILLED,
+    #                       0)
+    #
+    #         # if _ % 2 == 0:
+    #         #     frame[:, 0:width] = colors[0][0]
+    #         # else:
+    #         #     frame[:, 0:width] = colors[1][0]
+    #
+    #         video.write(frame)
+    #
+    # else:
     for _ in range(FPS * seconds):
         frame = np.zeros((height, width, 3), np.uint8)
 
