@@ -1,6 +1,5 @@
 import unittest
 import http.client
-import urllib.parse
 import json
 
 
