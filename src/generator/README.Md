@@ -8,3 +8,5 @@ We pick a duration between `min_length` and `max_length`
 `number of videos` is the number of videos we'll generate in a given run
 
 The file naming scheme for the videos is `pattern-color1-color2-length`
+
+Maybe don't actually commit any of the videos to the repo since they're big and git will cry

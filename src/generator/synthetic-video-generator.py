@@ -9,7 +9,7 @@ import random
 import cv2
 import numpy as np
 
-random.seed(10)
+# random.seed(10)
 # manually set the RNG seed to avoid too much redundant generation
 
 number_of_videos = 100

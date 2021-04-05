@@ -12,3 +12,6 @@ env/
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+
+# synthetic data directory
+/src/data/synthetic_data/
