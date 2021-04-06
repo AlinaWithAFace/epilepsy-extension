@@ -19,7 +19,8 @@ def get_warning(video_id, warning_id):
         AND
         warning_id = ?
         """,
-        (video_id, warning_id),
+        video_id,
+        warning_id,
     )
 
     row = cursor.fetchone()
@@ -46,7 +47,7 @@ def get_warnings(video_id):
             FROM Warnings
             WHERE warning_video_id = ?
             """,
-            (video_id,),
+            video_id,
         )
     elif warning_source not in ("AUTO", "USER"):
         return Response(status=http.HTTPStatus.BAD_REQUEST)
@@ -60,7 +61,7 @@ def get_warnings(video_id):
                   AND
                   warning_source = ?
             """,
-            (video_id, warning_source),
+            video_id, warning_source,
         )
 
     rows = cursor.fetchall()
@@ -97,7 +98,7 @@ def create_warning(video_id):
             warning_msg, warning_source)
             VALUES (?, ?, ?, ?, "USER")
             """,
-            (video_id, start, stop, message),
+            video_id, start, stop, message,
             commit=True,
         )
 

@@ -5,7 +5,8 @@ def _connection():
    connection.row_factory = sqlite3.Row
    return connection
 
-def execute(statement, args, commit=False):
+def execute(statement, *args, commit=False):
+    """Executes sql command with given arguments"""
     assert type(commit) == bool
     with _connection() as connection:
         cursor = connection.cursor()

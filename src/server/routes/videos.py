@@ -8,8 +8,8 @@ from sqlite3 import IntegrityError
 blueprint = Blueprint("videos", __name__)
 
 
-@blueprint.route("/<id>", methods=["GET"])
-def get_video_by_id(id):
+@blueprint.route("/<video_id>", methods=["GET"])
+def get_video_by_id(video_id):
     """Retrieves a video resource via it's identifier"""
 
     cursor = database.execute(
@@ -17,7 +17,7 @@ def get_video_by_id(id):
         SELECT video_id, video_vid, video_title FROM Videos
             WHERE video_id = ?
         """,
-        (id,),
+        video_id,
     )
 
     row = cursor.fetchone()
@@ -37,7 +37,7 @@ def get_video_by_vid(vid):
         SELECT video_id, video_vid, video_title FROM Videos
         WHERE video_vid = ?
         """,
-        (vid,),
+        vid,
     )
 
     row = cursor.fetchone()
@@ -62,7 +62,8 @@ def create_video_by_vid(vid):
             INSERT INTO Videos (video_vid, video_title)
             VALUES (?, ?);
             """,
-            (video.videoid, video.title),
+            video.videoid,
+            video.title,
             commit=True,
         )
         new_id = cursor.lastrowid
@@ -71,7 +72,7 @@ def create_video_by_vid(vid):
             headers={
                 "Location": f"/videos/{new_id}",
             },
-            status=http.HTTPStatus.CREATED
+            status=http.HTTPStatus.CREATED,
         )
 
     except (ValueError, IntegrityError, OSError) as e:
