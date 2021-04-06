@@ -28,12 +28,13 @@ def get_video_by_id(video_id):
         return Response(status=http.HTTPStatus.NOT_FOUND)
     else:
         return Response(response=json.dumps(dict(row)),
+                        headers={"Content-Type": "text/json"},
                         status=http.HTTPStatus.OK)
 
 
 @blueprint.route("/vid/<vid>", methods=["GET"])
 def get_video_by_vid(vid):
-    """Retrieves a video resource via a YouTube video identifier"""
+    """Retrieves a video resource location given a YouTube video identifier"""
 
     cursor = database.execute(
         """
@@ -44,11 +45,14 @@ def get_video_by_vid(vid):
     )
 
     row = cursor.fetchone()
+    video_id = row["video_id"]
 
     if not row:
         return Response(status=http.HTTPStatus.NOT_FOUND)
     else:
-        return Response(response=json.dumps(dict(row)),
+        return Response(headers={
+                            "Location": f"/videos/{video_id}",
+                        },
                         status=http.HTTPStatus.OK)
 
 

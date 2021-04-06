@@ -33,6 +33,7 @@ def get_warning(video_id, warning_id):
         return Response(status=http.HTTPStatus.NOT_FOUND)
     else:
         return Response(response=json.dumps(dict(row)),
+                        headers={"Content-Type": "text/json"},
                         status=http.HTTPStatus.OK)
 
 
@@ -77,6 +78,7 @@ def get_warnings(video_id):
     else:
         return Response(
             response=json.dumps(list(map(dict, rows))),
+            headers={"Content-Type": "text/json"},
             status=http.HTTPStatus.OK
         )
 
