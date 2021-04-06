@@ -1,3 +1,5 @@
+"""Routes for retrieving and creating video warnings"""
+
 import database
 import http
 import json
@@ -10,6 +12,8 @@ blueprint = Blueprint("warnings", __name__)
 
 @blueprint.route("/<video_id>/warnings/<warning_id>", methods=["GET"])
 def get_warning(video_id, warning_id):
+    """Gets a warning for a video based on the video id and the warning id"""
+
     cursor = database.execute(
         """
         SELECT warning_id, warning_created, warning_start, warning_end,
@@ -28,7 +32,9 @@ def get_warning(video_id, warning_id):
     if row is None:
         return Response(status=http.HTTPStatus.NOT_FOUND)
     else:
-        return Response(response=json.dumps(dict(row)), status=http.HTTPStatus.OK)
+        return Response(response=json.dumps(dict(row)),
+                        headers={"Content-Type": "text/json"},
+                        status=http.HTTPStatus.OK)
 
 
 @blueprint.route("/<video_id>/warnings", methods=["GET"])
@@ -61,7 +67,8 @@ def get_warnings(video_id):
                   AND
                   warning_source = ?
             """,
-            video_id, warning_source,
+            video_id,
+            warning_source,
         )
 
     rows = cursor.fetchall()
@@ -70,10 +77,10 @@ def get_warnings(video_id):
         return Response(status=http.HTTPStatus.NOT_FOUND)
     else:
         return Response(
-            response=json.dumps(list(map(dict, rows))), status=http.HTTPStatus.OK
+            response=json.dumps(list(map(dict, rows))),
+            headers={"Content-Type": "text/json"},
+            status=http.HTTPStatus.OK
         )
-
-    return response
 
 
 @blueprint.route("/<video_id>/warnings", methods=["POST"])
@@ -98,7 +105,10 @@ def create_warning(video_id):
             warning_msg, warning_source)
             VALUES (?, ?, ?, ?, "USER")
             """,
-            video_id, start, stop, message,
+            video_id,
+            start,
+            stop,
+            message,
             commit=True,
         )
 
@@ -119,4 +129,5 @@ def create_warning(video_id):
 @blueprint.route("/<video_id>/warnings/generate", methods=["POST"])
 def generate_warnings(video_id):
     """Generate warnings for video"""
+
     return Response(status=http.HTTPStatus.NOT_IMPLEMENTED)

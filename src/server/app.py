@@ -1,4 +1,4 @@
-"""Simple server. Right now just has a single route for screening videos."""
+"""Server to create warnings for videos"""
 
 from flask import Flask
 from routes import videos, warnings
