@@ -71,7 +71,7 @@ def create_video_by_vid(vid):
             headers={
                 "Location": f"/videos/{new_id}",
             },
-            status_code=http.HTTPStatus.CREATED
+            status=http.HTTPStatus.CREATED
         )
 
     except (ValueError, IntegrityError, OSError) as e:
