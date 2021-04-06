@@ -37,8 +37,9 @@ Risk factors for screens:
 -   whether a person's eyes are open or closed at the time
 -   [Source](https://www.onlineflashtest.com/PhotosensitiveEpilepsy.aspx)
 
-Ratings for movies that might have triggers in them: \*
-<https://moviehealthcommunity.tumblr.com/>
+Ratings for movies that might have triggers in them:
+
+-   <https://moviehealthcommunity.tumblr.com/>
 
 > Results: A flash is a potential hazard if it has luminance ≥20 cd/m2,
 > occurs at a frequency of ≥3 Hz, and occupies a solid visual angle of
