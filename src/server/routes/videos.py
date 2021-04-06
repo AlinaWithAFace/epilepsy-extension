@@ -1,69 +1,79 @@
 import pafy
 import http
-import sqlite3
 import database
-from flask import Blueprint
+import json
+from flask import Blueprint, Response
+from sqlite3 import IntegrityError
 
 blueprint = Blueprint("videos", __name__)
 
 
+@blueprint.route("/<id>", methods=["GET"])
+def get_video_by_id(id):
+    """Retrieves a video resource via it's identifier"""
+
+    cursor = database.execute(
+        """
+        SELECT video_id, video_vid, video_title FROM Videos
+            WHERE video_id = ?
+        """,
+        (id,),
+    )
+
+    row = cursor.fetchone()
+
+    if not row:
+        return Response(status=http.HTTPStatus.NOT_FOUND)
+    else:
+        return Response(response=json.dumps(dict(row)), status=http.HTTPStatus.OK)
+
+
 @blueprint.route("/vid/<vid>", methods=["GET"])
 def get_video_by_vid(vid):
-    """Retrieves a video resource via a YouTube video identifier
+    """Retrieves a video resource via a YouTube video identifier"""
 
-    Input:
+    cursor = database.execute(
+        """
+        SELECT video_id, video_vid, video_title FROM Videos
+        WHERE video_vid = ?
+        """,
+        (vid,),
+    )
 
-    -   `vid`: unique YouTube video identifier
+    row = cursor.fetchone()
 
-    Returns:
-
-    Dictionary data of the retrieved resource and a http status code
-    """
-
-    with database.connection() as connection:
-        cursor = connection.cursor()
-
-        cursor.execute(
-            """
-            SELECT video_id, video_vid, video_title FROM Videos
-            WHERE video_vid = ?
-            """,
-            (vid,),
-        )
-
-        row = cursor.fetchone()
-
-        if not row:
-            return {}, http.HTTPStatus.NOT_FOUND
-
-        return dict(row), http.HTTPStatus.OK
+    if not row:
+        return Response(status=http.HTTPStatus.NOT_FOUND)
+    else:
+        return Response(response=json.dumps(dict(row)), status=http.HTTPStatus.OK)
 
 
 @blueprint.route("/vid/<vid>", methods=["POST"])
 def create_video_by_vid(vid):
-    """Creates a video resource
+    """Creates a video resource using a YouTube video identifier"""
 
-    Input:
-
-    -   `vid`: unique YouTube video identifier
-
-    Returns:
-
-    Dictionary data of the created resource and a http status code
-    """
+    response = Response()
 
     try:
         video = pafy.new(vid)
-    except:
-        return {}, http.HTTPStatus.BAD_REQUEST
 
-    with database.connection() as connection:
-        cursor = connection.cursor()
-
-        cursor.execute(
+        cursor = database.execute(
             """
             INSERT INTO Videos (video_vid, video_title)
-            VALUES (?, ?)
+            VALUES (?, ?);
             """,
             (video.videoid, video.title),
+            commit=True,
         )
+        new_id = cursor.lastrowid
+
+        return Response(
+            headers={
+                "Location": f"/videos/{new_id}",
+            },
+            status_code=http.HTTPStatus.CREATED
+        )
+
+    except (ValueError, IntegrityError, OSError) as e:
+        print(e)
+        return Response(status=http.HTTPStatus.BAD_REQUEST)

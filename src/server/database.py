@@ -1,6 +1,17 @@
 import sqlite3
 
-def connection():
+def _connection():
    connection = sqlite3.connect("episense.db")
    connection.row_factory = sqlite3.Row
    return connection
+
+def execute(statement, args, commit=False):
+    assert type(commit) == bool
+    with _connection() as connection:
+        cursor = connection.cursor()
+        cursor.execute(statement, args)
+
+        if commit:
+            connection.commit()
+
+    return cursor
