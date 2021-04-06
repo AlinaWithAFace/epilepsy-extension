@@ -1,3 +1,5 @@
+"""Routes for retrieving and creating video entities"""
+
 import pafy
 import http
 import database
@@ -15,7 +17,7 @@ def get_video_by_id(video_id):
     cursor = database.execute(
         """
         SELECT video_id, video_vid, video_title FROM Videos
-            WHERE video_id = ?
+        WHERE video_id = ?
         """,
         video_id,
     )
@@ -25,7 +27,8 @@ def get_video_by_id(video_id):
     if not row:
         return Response(status=http.HTTPStatus.NOT_FOUND)
     else:
-        return Response(response=json.dumps(dict(row)), status=http.HTTPStatus.OK)
+        return Response(response=json.dumps(dict(row)),
+                        status=http.HTTPStatus.OK)
 
 
 @blueprint.route("/vid/<vid>", methods=["GET"])
@@ -45,14 +48,13 @@ def get_video_by_vid(vid):
     if not row:
         return Response(status=http.HTTPStatus.NOT_FOUND)
     else:
-        return Response(response=json.dumps(dict(row)), status=http.HTTPStatus.OK)
+        return Response(response=json.dumps(dict(row)),
+                        status=http.HTTPStatus.OK)
 
 
 @blueprint.route("/vid/<vid>", methods=["POST"])
 def create_video_by_vid(vid):
     """Creates a video resource using a YouTube video identifier"""
-
-    response = Response()
 
     try:
         video = pafy.new(vid)

@@ -16,5 +16,3 @@ curl -i "http://127.0.0.1:5000/videos/10/warnings/4"
 curl -i --header "Content-Type: application/json" --request POST \
     --data '{ "start": 0, "stop": 2, "message": "bad section" }' \
     "http://127.0.0.1:5000/videos/10/warnings"
-
-
