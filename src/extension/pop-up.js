@@ -9,6 +9,7 @@ async function getVideoURI(youtube_url) {
     let request = new Request(vid_uri, { method: "POST" });
     let response = await fetch(request);
     if (response.status === 201) return response.headers.get("location");
+    else return null;
   }
   else return null;
 }
