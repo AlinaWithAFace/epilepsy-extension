@@ -45,11 +45,11 @@ def get_video_by_vid(vid):
     )
 
     row = cursor.fetchone()
-    video_id = row["video_id"]
 
     if not row:
         return Response(status=http.HTTPStatus.NOT_FOUND)
     else:
+        video_id = row["video_id"]
         return Response(headers={
                             "Location": f"/videos/{video_id}",
                         },

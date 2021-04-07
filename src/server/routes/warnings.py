@@ -17,7 +17,7 @@ def get_warning(video_id, warning_id):
     cursor = database.execute(
         """
         SELECT warning_id, warning_created, warning_start, warning_end,
-               warning_msg, warning_source
+               warning_description, warning_source
         FROM Warnings
         WHERE warning_video_id = ?
         AND
@@ -49,7 +49,7 @@ def get_warnings(video_id):
         cursor = database.execute(
             """
             SELECT warning_id, warning_created, warning_start, warning_end,
-                   warning_msg, warning_source
+                   warning_description, warning_source
             FROM Warnings
             WHERE warning_video_id = ?
             """,
@@ -61,7 +61,7 @@ def get_warnings(video_id):
         cursor = database.execute(
             """
             SELECT warning_id, warning_created, warning_start, warning_end,
-                   warning_msg, warning_source
+                   warning_description, warning_source
             FROM Warnings
             WHERE warning_video_id = ?
                   AND
@@ -91,24 +91,24 @@ def create_warning(video_id):
         request_data = request.get_json()
 
         if not request_data or any(
-            x not in request_data for x in ("start", "stop", "message")
+            x not in request_data for x in ("start", "stop", "description")
         ):
             print("missing field", request_data)
             return Response(status=http.HTTPStatus.BAD_REQUEST)
         start = request_data["start"]
         stop = request_data["stop"]
-        message = request_data["message"]
+        description = request_data["description"]
 
         cursor = database.execute(
             """
             INSERT INTO Warnings (warning_video_id, warning_start, warning_end,
-            warning_msg, warning_source)
+            warning_description, warning_source)
             VALUES (?, ?, ?, ?, "USER")
             """,
             video_id,
             start,
             stop,
-            message,
+            description,
             commit=True,
         )
 
