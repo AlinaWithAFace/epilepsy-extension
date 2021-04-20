@@ -1,0 +1,21 @@
+digraph entity_relationships {
+    fontname = "Bitstream Vera Sans";
+    fontsize = 14;
+
+    node [
+        fontname = "Bitstream Vera Sans Mono"
+            fontsize = 14
+            shape = "record"
+    ];
+
+    Videos [
+        label = "{Videos|P * video_id INTEGER\lU * video_vid TEXT\l\  * video_title TEXT\l\  * videos_data_created TIMESTAMP\l}"
+    ];
+
+    Warnings [
+        label = "{Warnings|P * warning_id INTEGER\lF * warning_video_id INTEGER\l\  * warning_created TIMESTAMP\l\  * warning_start INTEGER\l\  * warning_end INTEGER\l\  * warning_description TEXT\l\  * warning_source text\l}"
+    ]
+
+    Warnings -> Videos;
+
+}
