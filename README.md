@@ -72,3 +72,11 @@ Ratings for movies that might have triggers in them:
 -   For user testing, ask people on the epilepsy subreddit?
     -   Eg here's a thread with a few people claiming photosensetivity
         <https://www.reddit.com/r/Epilepsy/comments/l5o436/tiktok_just_added_this_popup_i_know_its_not_many/>
+
+
+## Potential Datasets
+
+- UCF-101
+- HMDB-51
+- Kinetics
+- https://research.google.com/youtube8m/index.html
