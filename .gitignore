@@ -14,5 +14,5 @@ env/
 # Editor-based HTTP Client requests
 /httpRequests/
 
-# synthetic data directory
-/src/data/synthetic_data/
+# data directory
+/src/data/
