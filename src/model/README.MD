@@ -7,3 +7,9 @@ Draft of model is on Kaggle for ease of training
 https://www.kaggle.com/alinawithaface/epilepsy-extension
 
 Initial tutorial uses the UCF101 dataset
+
+Pretrained model taken from https://github.com/kenshohara/3D-ResNets-PyTorch
+Download available here:
+https://drive.google.com/open?id=1xbYbZ7rpyjftI_KCk6YuL-XrfQDz7Yd4
+
+Use model r3d50_KMS_200ep from https://drive.google.com/file/d/1Z1agO6kKkMr-RcQz3DTptOORrqma1dQd/view?usp=sharing
