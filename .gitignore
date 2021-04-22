@@ -16,3 +16,5 @@ env/
 
 # data directory
 /src/data/
+/src/model/data
+
