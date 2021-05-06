@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 This can be used to add flashing patterns to real videos, which we can then add
@@ -45,7 +45,7 @@ def modify_video(source_path, output_path, probability):
         width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+        fourcc = cv2.VideoWriter_fourcc(*"MP42")
         out = cv2.VideoWriter(str(output_path), fourcc,
                               float(fps), (width, height))
 
@@ -86,5 +86,5 @@ if __name__ == "__main__":
         os.makedirs(args.output)
 
     for fname in os.listdir(args.source):
-        modify_video(args.source / fname, args.output / fname,
+        modify_video(args.source / fname, (args.output / fname).with_suffix(".avi"),
                      probability=args.prob)
