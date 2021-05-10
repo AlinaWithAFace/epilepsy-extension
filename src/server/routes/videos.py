@@ -28,7 +28,7 @@ def get_video_by_id(video_id):
         return Response(status=http.HTTPStatus.NOT_FOUND)
     else:
         return Response(response=json.dumps(dict(row)),
-                        headers={"Content-Type": "text/json"},
+                        headers={"Content-Type": "text/json"}
                         status=http.HTTPStatus.OK)
 
 
@@ -51,9 +51,9 @@ def get_video_by_vid(vid):
     else:
         video_id = row["video_id"]
         return Response(headers={
-                            "Location": f"/videos/{video_id}",
+                            "Location": f"/api/videos/{video_id}",
                         },
-                        status=http.HTTPStatus.OK)
+                        status=http.HTTPStatus.SEE_OTHER)
 
 
 @blueprint.route("/vid/<vid>", methods=["POST"])
@@ -76,7 +76,7 @@ def create_video_by_vid(vid):
 
         return Response(
             headers={
-                "Location": f"/videos/{new_id}",
+                "Location": f"/api/videos/{new_id}",
             },
             status=http.HTTPStatus.CREATED,
         )
