@@ -116,7 +116,7 @@ def create_warning(video_id):
 
         return Response(
             headers={
-                "Location": f"/videos/{video_id}/warnings/{new_id}",
+                "Location": f"/api/videos/{video_id}/warnings/{new_id}",
             },
             status=http.HTTPStatus.CREATED,
         )
