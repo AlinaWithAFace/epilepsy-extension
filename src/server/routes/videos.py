@@ -92,6 +92,7 @@ def create_video():
 
         return Response(
             headers={
+                "Access-Control-Expose-Headers": "Location",
                 "Location": f"/api/videos/{new_id}",
             },
             status=http.HTTPStatus.CREATED,
