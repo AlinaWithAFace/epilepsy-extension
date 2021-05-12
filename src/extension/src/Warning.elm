@@ -3,5 +3,5 @@ module Warning exposing(Warning)
 type alias Warning =
   { start : Int
   , stop : Int
-  , description : Int
+  , description : String
   }
