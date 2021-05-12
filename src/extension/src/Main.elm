@@ -3,6 +3,7 @@ module Main exposing (main)
 import Browser
 import Html exposing (Html, button, div, h1, p, text)
 import Html.Events exposing (onClick)
+import Page.ListWarnings as ListWarnings
 import RemoteData exposing (WebData)
 import Url
 import Url.Parser exposing ((</>), (<?>))
@@ -22,6 +23,7 @@ main =
 
 type Page
     = EmptyPage
+    | ListPage ListWarnings.Model
 
 
 type alias Model =
@@ -56,6 +58,8 @@ init videoURL =
 
 type Msg
     = VideoMsg Video.Msg
+    | ListPageMsg ListWarnings.Msg
+    | ClickList (List String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -76,6 +80,24 @@ update msg model =
             ( { model | video = RemoteData.Loading }
             , Cmd.map VideoMsg (createVideo id)
             )
+
+        ( ListPageMsg subMsg, ListPage pageModel ) ->
+            let
+                ( updatedPageModel, updatedCmd ) =
+                    ListWarnings.update subMsg pageModel
+            in
+            ( { model | page = ListPage updatedPageModel }
+            , Cmd.map ListPageMsg updatedCmd
+            )
+        ( ClickList path, _) ->
+            let
+                ( updatedPageModel, updatedCmd ) =
+                    ListWarnings.init path
+            in
+            ( { model | page = ListPage updatedPageModel }
+            , Cmd.map ListPageMsg updatedCmd
+            )
+
 
         ( _, _ ) ->
             ( model, Cmd.none )
@@ -101,9 +123,17 @@ view model =
         ( EmptyPage, RemoteData.Success video ) ->
             viewVideo video
 
+        (ListPage pageModel, RemoteData.Success video) ->
+            div []
+                [ viewVideo video
+                , Html.map ListPageMsg (ListWarnings.view pageModel)
+                ]
+
+
 
 viewVideo : Video -> Html Msg
 viewVideo video =
     div []
         [ h1 [] [ text video.title ]
+        , button [ onClick (ClickList video.path)] [ text "Display Warnings" ]
         ]

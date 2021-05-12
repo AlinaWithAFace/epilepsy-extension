@@ -10,12 +10,8 @@ import Json.Encode as Encode
 
 type alias Video =
     { title : String
-    , uri : String
+    , path : List String
     }
-
-
-type alias URI =
-    String
 
 
 type alias YouTubeId =
@@ -59,7 +55,7 @@ createVideo id =
 
 decodeVideo : Decode.Decoder Video
 decodeVideo =
-    Decode.index 0 (Decode.map2 Video decodeTitle decodeURI)
+    Decode.index 0 (Decode.map2 Video decodeTitle decodePath)
 
 
 decodeTitle : Decode.Decoder String
@@ -67,7 +63,7 @@ decodeTitle =
     Decode.field "video_title" Decode.string
 
 
-decodeURI : Decode.Decoder URI
-decodeURI =
-    Decode.map (\id -> url ([ "videos" ] ++ [ String.fromInt id ]) [])
+decodePath : Decode.Decoder (List String)
+decodePath =
+    Decode.map (\id -> ([ "videos" ] ++ [ String.fromInt id ]))
         (Decode.field "video_id" Decode.int)
