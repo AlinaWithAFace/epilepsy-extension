@@ -8,7 +8,7 @@ curl -i --header "Content-Type: application/json" --request POST \
 
 
 # Get a video by vid:
-curl -i "http://127.0.0.1:5000/api/videos?vid=4jXEuIHY9ic"
+curl -i "http://localhost:5000/api/videos?vid=4jXEuIHY9ic"
 
 # Get all videos:
 curl -i "http://127.0.0.1:5000/api/videos"
