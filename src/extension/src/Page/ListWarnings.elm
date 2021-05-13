@@ -1,7 +1,7 @@
 module Page.ListWarnings exposing (Model, Msg(..), init, update, view)
 
 import Api exposing (Path, url)
-import Html exposing (Html, br, div, h2, p, strong, table, tbody, td, text, th, tr)
+import Html exposing (Html, div, h2, table, tbody, td, text, th, tr)
 import Html.Attributes exposing (class, id)
 import Http
 import Json.Decode as Decode
@@ -37,13 +37,25 @@ view model =
             text ""
 
         RemoteData.Loading ->
+            -- div [ class "center" ]
+            --     [ h2 [ class "loading" ] [ text "Loading Warnings..." ] ]
             text ""
 
         RemoteData.Success warnings ->
-            div [ id "warnings" ] (List.map viewWarning warnings)
+            div [ id "warnings" ] (viewWarnings warnings)
 
         RemoteData.Failure _ ->
-            text "Internal Error"
+            div [ class "center" ]
+                [ h2 [ class "error" ] [ text "Internal Error" ] ]
+
+
+viewWarnings : List Warning -> List (Html Msg)
+viewWarnings warnings =
+    if List.isEmpty warnings then
+        [ div [ class "center" ] [ h2 [ class "error" ] [ text "No user warnings have been created for this video" ] ] ]
+
+    else
+        List.map viewWarning warnings
 
 
 viewWarning : Warning -> Html Msg

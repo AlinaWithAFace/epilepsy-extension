@@ -6,6 +6,7 @@ import Html exposing (Html, button, div, h1, h2, header, menu, p, text)
 import Html.Attributes exposing (class, id)
 import Html.Events exposing (onClick)
 import Page.ListWarnings as ListWarnings
+import Page.NewWarning as NewWarning
 import RemoteData exposing (WebData)
 import Url
 import Url.Parser exposing ((</>), (<?>))
@@ -25,6 +26,7 @@ main =
 type Page
     = EmptyPage
     | ListPage ListWarnings.Model
+    | NewPage NewWarning.Model
 
 
 type alias Model =
@@ -62,8 +64,9 @@ init videoURL =
 type Msg
     = VideoMsg Video.Msg
     | ListPageMsg ListWarnings.Msg
+    | NewPageMsg NewWarning.Msg
     | ClickList Path
-    | ClickCreate Path
+    | ClickNew Path
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -103,6 +106,24 @@ update msg model =
             , Cmd.map ListPageMsg updatedCmd
             )
 
+        ( NewPageMsg subMsg, NewPage pageModel ) ->
+            let
+                ( updatedPageModel, updatedCmd ) =
+                    NewWarning.update subMsg pageModel
+            in
+            ( { model | page = NewPage updatedPageModel }
+            , Cmd.map NewPageMsg updatedCmd
+            )
+
+        ( ClickNew path, _ ) ->
+            let
+                ( updatedPageModel, updatedCmd ) =
+                    NewWarning.init path
+            in
+            ( { model | page = NewPage updatedPageModel }
+            , Cmd.map NewPageMsg updatedCmd
+            )
+
         ( _, _ ) ->
             ( model, Cmd.none )
 
@@ -116,15 +137,21 @@ view : Model -> Html Msg
 view model =
     case ( model.page, model.video ) of
         ( _, RemoteData.Loading ) ->
-            h2 [ class "loading" ] [ text "Loading Video Data" ]
+            -- header [] [ div [ class "center" ] [ h2 [ class "loading" ] [ text "Loading Video Data" ] ] ]
+            header [] [ div [ class "center" ] [ text "" ] ]
 
         ( _, RemoteData.Failure e ) ->
-            h2 [ class "error" ] [ text "Internal Failure Loading Video" ]
+            header [] [ div [ class "center" ] [ h2 [ class "error" ] [ text "Internal Failure Loading Video" ] ] ]
 
         ( _, RemoteData.NotAsked ) ->
-            h2
-                [ class "error" ]
-                [ text "Page does not appear to be a YouTube video" ]
+            header []
+                [ div
+                    [ class "center" ]
+                    [ h2
+                        [ class "error" ]
+                        [ text "Page does not appear to be a YouTube video" ]
+                    ]
+                ]
 
         ( EmptyPage, RemoteData.Success video ) ->
             div []
@@ -136,17 +163,23 @@ view model =
                 , Html.map ListPageMsg (ListWarnings.view pageModel)
                 ]
 
+        ( NewPage pageModel, RemoteData.Success video ) ->
+            div []
+                [ viewVideo video
+                , Html.map NewPageMsg (NewWarning.view pageModel)
+                ]
+
 
 viewVideo : Video -> Html Msg
 viewVideo video =
     header []
-        [ h1 [] [text video.title]
+        [ h1 [] [ text ("Warnings For \"" ++ video.title ++ "\"") ]
         , menu []
             [ button
                 [ onClick (ClickList video.path) ]
                 [ text "Show Warnings" ]
             , button
-                [ onClick (ClickCreate video.path) ]
+                [ onClick (ClickNew video.path) ]
                 [ text "Create New Warnings" ]
             ]
         ]

@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.aO.B === region.P.B)
+	if (region.aP.C === region.Q.C)
 	{
-		return 'on line ' + region.aO.B;
+		return 'on line ' + region.aP.C;
 	}
-	return 'on lines ' + region.aO.B + ' through ' + region.P.B;
+	return 'on lines ' + region.aP.C + ' through ' + region.Q.C;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aE,
-		impl.aV,
-		impl.aS,
+		impl.aF,
+		impl.aW,
+		impl.aT,
 		function() { return function() {} }
 	);
 });
@@ -2704,9 +2704,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		o: func(record.o),
-		L: record.L,
-		J: record.J
+		p: func(record.p),
+		M: record.M,
+		K: record.K
 	}
 });
 
@@ -2974,11 +2974,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.o;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.L;
+		var message = !tag ? value : tag < 3 ? value.a : value.p;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.M;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.J) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.K) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3928,11 +3928,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aE,
-		impl.aV,
-		impl.aS,
+		impl.aF,
+		impl.aW,
+		impl.aT,
 		function(sendToApp, initialModel) {
-			var view = impl.aX;
+			var view = impl.aY;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3964,12 +3964,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aE,
-		impl.aV,
-		impl.aS,
+		impl.aF,
+		impl.aW,
+		impl.aT,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.K && impl.K(sendToApp)
-			var view = impl.aX;
+			var divertHrefToApp = impl.L && impl.L(sendToApp)
+			var view = impl.aY;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3977,12 +3977,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.au);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.av);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.aU) && (_VirtualDom_doc.title = title = doc.aU);
+				(title !== doc.aV) && (_VirtualDom_doc.title = title = doc.aV);
 			});
 		}
 	);
@@ -4038,12 +4038,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.aH;
-	var onUrlRequest = impl.aI;
+	var onUrlChange = impl.aI;
+	var onUrlRequest = impl.aJ;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		K: function(sendToApp)
+		L: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4059,9 +4059,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.ac === next.ac
-							&& curr.U === next.U
-							&& curr._.a === next._.a
+							&& curr.ad === next.ad
+							&& curr.V === next.V
+							&& curr.aa.a === next.aa.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4069,13 +4069,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		aE: function(flags)
+		aF: function(flags)
 		{
-			return A3(impl.aE, flags, _Browser_getUrl(), key);
+			return A3(impl.aF, flags, _Browser_getUrl(), key);
 		},
-		aX: impl.aX,
-		aV: impl.aV,
-		aS: impl.aS
+		aY: impl.aY,
+		aW: impl.aW,
+		aT: impl.aT
 	});
 }
 
@@ -4141,17 +4141,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { aC: 'hidden', av: 'visibilitychange' }
+		? { aD: 'hidden', aw: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { aC: 'mozHidden', av: 'mozvisibilitychange' }
+		? { aD: 'mozHidden', aw: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { aC: 'msHidden', av: 'msvisibilitychange' }
+		? { aD: 'msHidden', aw: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { aC: 'webkitHidden', av: 'webkitvisibilitychange' }
-		: { aC: 'hidden', av: 'visibilitychange' };
+		? { aD: 'webkitHidden', aw: 'webkitvisibilitychange' }
+		: { aD: 'hidden', aw: 'visibilitychange' };
 }
 
 
@@ -4232,12 +4232,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		ai: _Browser_getScene(),
-		an: {
-			ap: _Browser_window.pageXOffset,
-			aq: _Browser_window.pageYOffset,
-			ao: _Browser_doc.documentElement.clientWidth,
-			T: _Browser_doc.documentElement.clientHeight
+		aj: _Browser_getScene(),
+		ao: {
+			aq: _Browser_window.pageXOffset,
+			ar: _Browser_window.pageYOffset,
+			ap: _Browser_doc.documentElement.clientWidth,
+			U: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4247,8 +4247,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		ao: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		T: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		ap: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		U: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4271,15 +4271,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			ai: {
-				ao: node.scrollWidth,
-				T: node.scrollHeight
+			aj: {
+				ap: node.scrollWidth,
+				U: node.scrollHeight
 			},
-			an: {
-				ap: node.scrollLeft,
-				aq: node.scrollTop,
-				ao: node.clientWidth,
-				T: node.clientHeight
+			ao: {
+				aq: node.scrollLeft,
+				ar: node.scrollTop,
+				ap: node.clientWidth,
+				U: node.clientHeight
 			}
 		};
 	});
@@ -4309,18 +4309,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			ai: _Browser_getScene(),
-			an: {
-				ap: x,
-				aq: y,
-				ao: _Browser_doc.documentElement.clientWidth,
-				T: _Browser_doc.documentElement.clientHeight
+			aj: _Browser_getScene(),
+			ao: {
+				aq: x,
+				ar: y,
+				ap: _Browser_doc.documentElement.clientWidth,
+				U: _Browser_doc.documentElement.clientHeight
 			},
-			ay: {
-				ap: x + rect.left,
-				aq: y + rect.top,
-				ao: rect.width,
-				T: rect.height
+			az: {
+				aq: x + rect.left,
+				ar: y + rect.top,
+				ap: rect.width,
+				U: rect.height
 			}
 		};
 	});
@@ -4365,25 +4365,25 @@ var _Http_toTask = F3(function(router, toTask, request)
 	return _Scheduler_binding(function(callback)
 	{
 		function done(response) {
-			callback(toTask(request.az.a(response)));
+			callback(toTask(request.aA.a(response)));
 		}
 
 		var xhr = new XMLHttpRequest();
 		xhr.addEventListener('error', function() { done($elm$http$Http$NetworkError_); });
 		xhr.addEventListener('timeout', function() { done($elm$http$Http$Timeout_); });
-		xhr.addEventListener('load', function() { done(_Http_toResponse(request.az.b, xhr)); });
-		$elm$core$Maybe$isJust(request.am) && _Http_track(router, xhr, request.am.a);
+		xhr.addEventListener('load', function() { done(_Http_toResponse(request.aA.b, xhr)); });
+		$elm$core$Maybe$isJust(request.an) && _Http_track(router, xhr, request.an.a);
 
 		try {
-			xhr.open(request.aF, request.aW, true);
+			xhr.open(request.aG, request.aX, true);
 		} catch (e) {
-			return done($elm$http$Http$BadUrl_(request.aW));
+			return done($elm$http$Http$BadUrl_(request.aX));
 		}
 
 		_Http_configureRequest(xhr, request);
 
-		request.au.a && xhr.setRequestHeader('Content-Type', request.au.a);
-		xhr.send(request.au.b);
+		request.av.a && xhr.setRequestHeader('Content-Type', request.av.a);
+		xhr.send(request.av.b);
 
 		return function() { xhr.c = true; xhr.abort(); };
 	});
@@ -4394,13 +4394,13 @@ var _Http_toTask = F3(function(router, toTask, request)
 
 function _Http_configureRequest(xhr, request)
 {
-	for (var headers = request.S; headers.b; headers = headers.b) // WHILE_CONS
+	for (var headers = request.T; headers.b; headers = headers.b) // WHILE_CONS
 	{
 		xhr.setRequestHeader(headers.a.a, headers.a.b);
 	}
-	xhr.timeout = request.aT.a || 0;
-	xhr.responseType = request.az.d;
-	xhr.withCredentials = request.as;
+	xhr.timeout = request.aU.a || 0;
+	xhr.responseType = request.aA.d;
+	xhr.withCredentials = request.at;
 }
 
 
@@ -4421,10 +4421,10 @@ function _Http_toResponse(toBody, xhr)
 function _Http_toMetadata(xhr)
 {
 	return {
-		aW: xhr.responseURL,
-		aP: xhr.status,
-		aQ: xhr.statusText,
-		S: _Http_parseHeaders(xhr.getAllResponseHeaders())
+		aX: xhr.responseURL,
+		aQ: xhr.status,
+		aR: xhr.statusText,
+		T: _Http_parseHeaders(xhr.getAllResponseHeaders())
 	};
 }
 
@@ -4519,15 +4519,15 @@ function _Http_track(router, xhr, tracker)
 	xhr.upload.addEventListener('progress', function(event) {
 		if (xhr.c) { return; }
 		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Sending({
-			aN: event.loaded,
-			aj: event.total
+			aO: event.loaded,
+			ak: event.total
 		}))));
 	});
 	xhr.addEventListener('progress', function(event) {
 		if (xhr.c) { return; }
 		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Receiving({
-			aK: event.loaded,
-			aj: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
+			aL: event.loaded,
+			ak: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
 		}))));
 	});
 }
@@ -5051,7 +5051,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {R: fragment, U: host, Y: path, _: port_, ac: protocol, ad: query};
+		return {S: fragment, V: host, Z: path, aa: port_, ad: protocol, ae: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5338,7 +5338,7 @@ var $author$project$Main$VideoMsg = function (a) {
 };
 var $author$project$Video$Video = F2(
 	function (title, path) {
-		return {Y: path, aU: title};
+		return {Z: path, aV: title};
 	});
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$int = _Json_decodeInt;
@@ -5953,7 +5953,7 @@ var $elm$http$Http$resolve = F2(
 			case 3:
 				var metadata = response.a;
 				return $elm$core$Result$Err(
-					$elm$http$Http$BadStatus(metadata.aP));
+					$elm$http$Http$BadStatus(metadata.aQ));
 			default:
 				var body = response.b;
 				return A2(
@@ -5981,7 +5981,7 @@ var $elm$http$Http$Request = function (a) {
 };
 var $elm$http$Http$State = F2(
 	function (reqs, subs) {
-		return {af: reqs, ak: subs};
+		return {ag: reqs, al: subs};
 	});
 var $elm$http$Http$init = $elm$core$Task$succeed(
 	A2($elm$http$Http$State, $elm$core$Dict$empty, _List_Nil));
@@ -6025,7 +6025,7 @@ var $elm$http$Http$updateReqs = F3(
 					return A2(
 						$elm$core$Task$andThen,
 						function (pid) {
-							var _v4 = req.am;
+							var _v4 = req.an;
 							if (_v4.$ === 1) {
 								return A3($elm$http$Http$updateReqs, router, otherCmds, reqs);
 							} else {
@@ -6055,7 +6055,7 @@ var $elm$http$Http$onEffects = F4(
 				return $elm$core$Task$succeed(
 					A2($elm$http$Http$State, reqs, subs));
 			},
-			A3($elm$http$Http$updateReqs, router, cmds, state.af));
+			A3($elm$http$Http$updateReqs, router, cmds, state.ag));
 	});
 var $elm$core$List$maybeCons = F3(
 	function (f, mx, xs) {
@@ -6098,7 +6098,7 @@ var $elm$http$Http$onSelfMsg = F3(
 				A2(
 					$elm$core$List$filterMap,
 					A3($elm$http$Http$maybeSend, router, tracker, progress),
-					state.ak)));
+					state.al)));
 	});
 var $elm$http$Http$Cancel = function (a) {
 	return {$: 0, a: a};
@@ -6112,14 +6112,14 @@ var $elm$http$Http$cmdMap = F2(
 			var r = cmd.a;
 			return $elm$http$Http$Request(
 				{
-					as: r.as,
-					au: r.au,
-					az: A2(_Http_mapExpect, func, r.az),
-					S: r.S,
-					aF: r.aF,
-					aT: r.aT,
-					am: r.am,
-					aW: r.aW
+					at: r.at,
+					av: r.av,
+					aA: A2(_Http_mapExpect, func, r.aA),
+					T: r.T,
+					aG: r.aG,
+					aU: r.aU,
+					an: r.an,
+					aX: r.aX
 				});
 		}
 	});
@@ -6142,11 +6142,11 @@ var $elm$http$Http$subscription = _Platform_leaf('Http');
 var $elm$http$Http$request = function (r) {
 	return $elm$http$Http$command(
 		$elm$http$Http$Request(
-			{as: false, au: r.au, az: r.az, S: r.S, aF: r.aF, aT: r.aT, am: r.am, aW: r.aW}));
+			{at: false, av: r.av, aA: r.aA, T: r.T, aG: r.aG, aU: r.aU, an: r.an, aX: r.aX}));
 };
 var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
-		{au: $elm$http$Http$emptyBody, az: r.az, S: _List_Nil, aF: 'GET', aT: $elm$core$Maybe$Nothing, am: $elm$core$Maybe$Nothing, aW: r.aW});
+		{av: $elm$http$Http$emptyBody, aA: r.aA, T: _List_Nil, aG: 'GET', aU: $elm$core$Maybe$Nothing, an: $elm$core$Maybe$Nothing, aX: r.aX});
 };
 var $author$project$Video$GotVideo = function (a) {
 	return {$: 0, a: a};
@@ -6220,11 +6220,11 @@ var $author$project$Api$url = F2(
 var $author$project$Video$getVideo = function (id) {
 	return $elm$http$Http$get(
 		{
-			az: A2(
+			aA: A2(
 				$elm$http$Http$expectJson,
 				$author$project$Video$getVideoMsg(id),
 				$author$project$Video$decodeVideo),
-			aW: A2(
+			aX: A2(
 				$author$project$Api$url,
 				_List_fromArray(
 					['videos']),
@@ -6239,7 +6239,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$url$Url$Parser$State = F5(
 	function (visited, unvisited, params, frag, value) {
-		return {s: frag, u: params, q: unvisited, m: value, w: visited};
+		return {u: frag, v: params, r: unvisited, n: value, x: visited};
 	});
 var $elm$url$Url$Parser$getFirstMatch = function (states) {
 	getFirstMatch:
@@ -6249,12 +6249,12 @@ var $elm$url$Url$Parser$getFirstMatch = function (states) {
 		} else {
 			var state = states.a;
 			var rest = states.b;
-			var _v1 = state.q;
+			var _v1 = state.r;
 			if (!_v1.b) {
-				return $elm$core$Maybe$Just(state.m);
+				return $elm$core$Maybe$Just(state.n);
 			} else {
 				if ((_v1.a === '') && (!_v1.b.b)) {
-					return $elm$core$Maybe$Just(state.m);
+					return $elm$core$Maybe$Just(state.n);
 				} else {
 					var $temp$states = rest;
 					states = $temp$states;
@@ -6351,20 +6351,20 @@ var $elm$url$Url$Parser$parse = F2(
 				A5(
 					$elm$url$Url$Parser$State,
 					_List_Nil,
-					$elm$url$Url$Parser$preparePath(url.Y),
-					$elm$url$Url$Parser$prepareQuery(url.ad),
-					url.R,
+					$elm$url$Url$Parser$preparePath(url.Z),
+					$elm$url$Url$Parser$prepareQuery(url.ae),
+					url.S,
 					$elm$core$Basics$identity)));
 	});
 var $elm$url$Url$Parser$Parser = $elm$core$Basics$identity;
 var $elm$url$Url$Parser$query = function (_v0) {
 	var queryParser = _v0;
 	return function (_v1) {
-		var visited = _v1.w;
-		var unvisited = _v1.q;
-		var params = _v1.u;
-		var frag = _v1.s;
-		var value = _v1.m;
+		var visited = _v1.x;
+		var unvisited = _v1.r;
+		var params = _v1.v;
+		var frag = _v1.u;
+		var value = _v1.n;
 		return _List_fromArray(
 			[
 				A5(
@@ -6414,11 +6414,11 @@ var $elm$url$Url$Parser$questionMark = F2(
 	});
 var $elm$url$Url$Parser$s = function (str) {
 	return function (_v0) {
-		var visited = _v0.w;
-		var unvisited = _v0.q;
-		var params = _v0.u;
-		var frag = _v0.s;
-		var value = _v0.m;
+		var visited = _v0.x;
+		var unvisited = _v0.r;
+		var params = _v0.v;
+		var frag = _v0.u;
+		var value = _v0.n;
 		if (!unvisited.b) {
 			return _List_Nil;
 		} else {
@@ -6491,14 +6491,14 @@ var $author$project$Main$init = function (videoURL) {
 	if (!_v0.$) {
 		var id = _v0.a;
 		return _Utils_Tuple2(
-			{t: $author$project$Main$EmptyPage, r: $krisajenkins$remotedata$RemoteData$Loading},
+			{m: $author$project$Main$EmptyPage, s: $krisajenkins$remotedata$RemoteData$Loading},
 			A2(
 				$elm$core$Platform$Cmd$map,
 				$author$project$Main$VideoMsg,
 				$author$project$Video$getVideo(id)));
 	} else {
 		return _Utils_Tuple2(
-			{t: $author$project$Main$EmptyPage, r: $krisajenkins$remotedata$RemoteData$NotAsked},
+			{m: $author$project$Main$EmptyPage, s: $krisajenkins$remotedata$RemoteData$NotAsked},
 			$elm$core$Platform$Cmd$none);
 	}
 };
@@ -6512,6 +6512,12 @@ var $author$project$Main$ListPage = function (a) {
 };
 var $author$project$Main$ListPageMsg = function (a) {
 	return {$: 1, a: a};
+};
+var $author$project$Main$NewPage = function (a) {
+	return {$: 2, a: a};
+};
+var $author$project$Main$NewPageMsg = function (a) {
+	return {$: 2, a: a};
 };
 var $author$project$Video$CreatedVideo = function (a) {
 	return {$: 1, a: a};
@@ -6565,13 +6571,13 @@ var $elm$json$Json$Encode$object = function (pairs) {
 };
 var $elm$http$Http$post = function (r) {
 	return $elm$http$Http$request(
-		{au: r.au, az: r.az, S: _List_Nil, aF: 'POST', aT: $elm$core$Maybe$Nothing, am: $elm$core$Maybe$Nothing, aW: r.aW});
+		{av: r.av, aA: r.aA, T: _List_Nil, aG: 'POST', aU: $elm$core$Maybe$Nothing, an: $elm$core$Maybe$Nothing, aX: r.aX});
 };
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Video$createVideo = function (id) {
 	return $elm$http$Http$post(
 		{
-			au: $elm$http$Http$jsonBody(
+			av: $elm$http$Http$jsonBody(
 				$elm$json$Json$Encode$object(
 					_List_fromArray(
 						[
@@ -6579,7 +6585,7 @@ var $author$project$Video$createVideo = function (id) {
 							'vid',
 							$elm$json$Json$Encode$string(id))
 						]))),
-			az: $elm$http$Http$expectWhatever(
+			aA: $elm$http$Http$expectWhatever(
 				A2(
 					$elm$core$Basics$composeR,
 					$elm$core$Result$map(
@@ -6587,7 +6593,7 @@ var $author$project$Video$createVideo = function (id) {
 							return id;
 						}),
 					A2($elm$core$Basics$composeR, $krisajenkins$remotedata$RemoteData$fromResult, $author$project$Video$CreatedVideo))),
-			aW: A2(
+			aX: A2(
 				$author$project$Api$url,
 				_List_fromArray(
 					['videos']),
@@ -6597,7 +6603,7 @@ var $author$project$Video$createVideo = function (id) {
 var $author$project$Page$ListWarnings$GotWarnings = $elm$core$Basics$identity;
 var $author$project$Warning$Warning = F3(
 	function (start, stop, description) {
-		return {aw: description, aO: start, aR: stop};
+		return {ax: description, aP: start, aS: stop};
 	});
 var $elm$json$Json$Decode$map3 = _Json_map3;
 var $author$project$Page$ListWarnings$decodeWarning = A4(
@@ -6611,11 +6617,11 @@ var $author$project$Page$ListWarnings$decodeWarnings = $elm$json$Json$Decode$lis
 var $author$project$Page$ListWarnings$getWarnings = function (path) {
 	return $elm$http$Http$get(
 		{
-			az: A2(
+			aA: A2(
 				$elm$http$Http$expectJson,
 				A2($elm$core$Basics$composeR, $krisajenkins$remotedata$RemoteData$fromResult, $elm$core$Basics$identity),
 				$author$project$Page$ListWarnings$decodeWarnings),
-			aW: A2(
+			aX: A2(
 				$author$project$Api$url,
 				_Utils_ap(
 					path,
@@ -6626,8 +6632,17 @@ var $author$project$Page$ListWarnings$getWarnings = function (path) {
 };
 var $author$project$Page$ListWarnings$init = function (path) {
 	return _Utils_Tuple2(
-		{G: $krisajenkins$remotedata$RemoteData$Loading},
+		{H: $krisajenkins$remotedata$RemoteData$Loading},
 		$author$project$Page$ListWarnings$getWarnings(path));
+};
+var $author$project$Page$NewWarning$InProgress = function (a) {
+	return {$: 0, a: a};
+};
+var $author$project$Page$NewWarning$init = function (path) {
+	return _Utils_Tuple2(
+		$author$project$Page$NewWarning$InProgress(
+			{ax: $elm$core$Maybe$Nothing, t: $elm$core$Maybe$Nothing, Z: path, aP: $elm$core$Maybe$Nothing, aS: $elm$core$Maybe$Nothing}),
+		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Page$ListWarnings$update = F2(
 	function (msg, model) {
@@ -6635,13 +6650,178 @@ var $author$project$Page$ListWarnings$update = F2(
 		return _Utils_Tuple2(
 			_Utils_update(
 				model,
-				{G: response}),
+				{H: response}),
 			$elm$core$Platform$Cmd$none);
+	});
+var $author$project$Page$NewWarning$Success = function (a) {
+	return {$: 1, a: a};
+};
+var $author$project$Page$NewWarning$CreatedWarning = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$json$Json$Encode$int = _Json_wrap;
+var $author$project$Page$NewWarning$createWarning = F2(
+	function (path, warning) {
+		return $elm$http$Http$post(
+			{
+				av: $elm$http$Http$jsonBody(
+					$elm$json$Json$Encode$object(
+						_List_fromArray(
+							[
+								_Utils_Tuple2(
+								'start',
+								$elm$json$Json$Encode$int(warning.aP)),
+								_Utils_Tuple2(
+								'stop',
+								$elm$json$Json$Encode$int(warning.aS)),
+								_Utils_Tuple2(
+								'description',
+								$elm$json$Json$Encode$string(warning.ax))
+							]))),
+				aA: $elm$http$Http$expectWhatever(
+					A2($elm$core$Basics$composeR, $krisajenkins$remotedata$RemoteData$fromResult, $author$project$Page$NewWarning$CreatedWarning)),
+				aX: A2(
+					$author$project$Api$url,
+					_Utils_ap(
+						path,
+						_List_fromArray(
+							['warnings'])),
+					_List_Nil)
+			});
+	});
+var $author$project$Page$NewWarning$update = F2(
+	function (msg, model) {
+		var _v0 = _Utils_Tuple2(msg, model);
+		if (_v0.b.$ === 1) {
+			if (!_v0.a.$) {
+				var w = _v0.a.a;
+				return _Utils_Tuple2(
+					$author$project$Page$NewWarning$Success(w),
+					$elm$core$Platform$Cmd$none);
+			} else {
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+			}
+		} else {
+			var m = _v0.b.a;
+			var _v1 = _Utils_Tuple2(
+				msg,
+				_Utils_Tuple3(m.aP, m.aS, m.ax));
+			_v1$4:
+			while (true) {
+				switch (_v1.a.$) {
+					case 1:
+						if (_v1.b.a.$ === 1) {
+							if ((!_v1.b.b.$) && (!_v1.b.c.$)) {
+								var _v4 = _v1.a;
+								var _v5 = _v1.b;
+								var _v6 = _v5.a;
+								return _Utils_Tuple2(
+									$author$project$Page$NewWarning$InProgress(
+										_Utils_update(
+											m,
+											{
+												t: $elm$core$Maybe$Just('Missing field \"Start\n                    Time\"')
+											})),
+									$elm$core$Platform$Cmd$none);
+							} else {
+								break _v1$4;
+							}
+						} else {
+							if (_v1.b.b.$ === 1) {
+								if (!_v1.b.c.$) {
+									var _v7 = _v1.a;
+									var _v8 = _v1.b;
+									var _v9 = _v8.b;
+									return _Utils_Tuple2(
+										$author$project$Page$NewWarning$InProgress(
+											_Utils_update(
+												m,
+												{
+													t: $elm$core$Maybe$Just('Missing field \"Stop\n                    Time\"')
+												})),
+										$elm$core$Platform$Cmd$none);
+								} else {
+									break _v1$4;
+								}
+							} else {
+								if (!_v1.b.c.$) {
+									var _v2 = _v1.a;
+									var _v3 = _v1.b;
+									var start = _v3.a.a;
+									var stop = _v3.b.a;
+									var desc = _v3.c.a;
+									return _Utils_Tuple2(
+										$author$project$Page$NewWarning$Success($krisajenkins$remotedata$RemoteData$Loading),
+										A2(
+											$author$project$Page$NewWarning$createWarning,
+											m.Z,
+											{ax: desc, aP: start, aS: stop}));
+								} else {
+									var _v10 = _v1.a;
+									var _v11 = _v1.b;
+									var _v12 = _v11.c;
+									return _Utils_Tuple2(
+										$author$project$Page$NewWarning$InProgress(
+											_Utils_update(
+												m,
+												{
+													t: $elm$core$Maybe$Just('Missing field\n                    \"Description\"')
+												})),
+										$elm$core$Platform$Cmd$none);
+								}
+							}
+						}
+					case 2:
+						var s = _v1.a.a;
+						return _Utils_Tuple2(
+							$author$project$Page$NewWarning$InProgress(
+								_Utils_update(
+									m,
+									{
+										aP: $elm$core$String$toInt(s)
+									})),
+							$elm$core$Platform$Cmd$none);
+					case 3:
+						var s = _v1.a.a;
+						return _Utils_Tuple2(
+							$author$project$Page$NewWarning$InProgress(
+								_Utils_update(
+									m,
+									{
+										aS: $elm$core$String$toInt(s)
+									})),
+							$elm$core$Platform$Cmd$none);
+					case 4:
+						var s = _v1.a.a;
+						return _Utils_Tuple2(
+							$author$project$Page$NewWarning$InProgress(
+								_Utils_update(
+									m,
+									{
+										ax: $elm$core$Maybe$Just(s)
+									})),
+							$elm$core$Platform$Cmd$none);
+					default:
+						return _Utils_Tuple2(
+							$author$project$Page$NewWarning$InProgress(m),
+							$elm$core$Platform$Cmd$none);
+				}
+			}
+			var _v13 = _v1.a;
+			return _Utils_Tuple2(
+				$author$project$Page$NewWarning$InProgress(
+					_Utils_update(
+						m,
+						{
+							t: $elm$core$Maybe$Just('Missing multiple\n                    fields')
+						})),
+				$elm$core$Platform$Cmd$none);
+		}
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		var _v0 = _Utils_Tuple2(msg, model.t);
-		_v0$6:
+		var _v0 = _Utils_Tuple2(msg, model.m);
+		_v0$8:
 		while (true) {
 			switch (_v0.a.$) {
 				case 0:
@@ -6653,7 +6833,7 @@ var $author$project$Main$update = F2(
 								return _Utils_Tuple2(
 									_Utils_update(
 										model,
-										{r: video}),
+										{s: video}),
 									$elm$core$Platform$Cmd$none);
 							case 1:
 								switch (_v0.a.a.a.$) {
@@ -6663,7 +6843,7 @@ var $author$project$Main$update = F2(
 										return _Utils_Tuple2(
 											_Utils_update(
 												model,
-												{r: $krisajenkins$remotedata$RemoteData$Loading}),
+												{s: $krisajenkins$remotedata$RemoteData$Loading}),
 											A2(
 												$elm$core$Platform$Cmd$map,
 												$author$project$Main$VideoMsg,
@@ -6674,10 +6854,10 @@ var $author$project$Main$update = F2(
 										return _Utils_Tuple2(
 											_Utils_update(
 												model,
-												{r: $krisajenkins$remotedata$RemoteData$NotAsked}),
+												{s: $krisajenkins$remotedata$RemoteData$NotAsked}),
 											$elm$core$Platform$Cmd$none);
 									default:
-										break _v0$6;
+										break _v0$8;
 								}
 							default:
 								var id = _v0.a.a.a;
@@ -6685,14 +6865,14 @@ var $author$project$Main$update = F2(
 								return _Utils_Tuple2(
 									_Utils_update(
 										model,
-										{r: $krisajenkins$remotedata$RemoteData$Loading}),
+										{s: $krisajenkins$remotedata$RemoteData$Loading}),
 									A2(
 										$elm$core$Platform$Cmd$map,
 										$author$project$Main$VideoMsg,
 										$author$project$Video$createVideo(id)));
 						}
 					} else {
-						break _v0$6;
+						break _v0$8;
 					}
 				case 1:
 					if (_v0.b.$ === 1) {
@@ -6705,13 +6885,13 @@ var $author$project$Main$update = F2(
 							_Utils_update(
 								model,
 								{
-									t: $author$project$Main$ListPage(updatedPageModel)
+									m: $author$project$Main$ListPage(updatedPageModel)
 								}),
 							A2($elm$core$Platform$Cmd$map, $author$project$Main$ListPageMsg, updatedCmd));
 					} else {
-						break _v0$6;
+						break _v0$8;
 					}
-				case 2:
+				case 3:
 					var path = _v0.a.a;
 					var _v6 = $author$project$Page$ListWarnings$init(path);
 					var updatedPageModel = _v6.a;
@@ -6720,11 +6900,38 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								t: $author$project$Main$ListPage(updatedPageModel)
+								m: $author$project$Main$ListPage(updatedPageModel)
 							}),
 						A2($elm$core$Platform$Cmd$map, $author$project$Main$ListPageMsg, updatedCmd));
+				case 2:
+					if (_v0.b.$ === 2) {
+						var subMsg = _v0.a.a;
+						var pageModel = _v0.b.a;
+						var _v7 = A2($author$project$Page$NewWarning$update, subMsg, pageModel);
+						var updatedPageModel = _v7.a;
+						var updatedCmd = _v7.b;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									m: $author$project$Main$NewPage(updatedPageModel)
+								}),
+							A2($elm$core$Platform$Cmd$map, $author$project$Main$NewPageMsg, updatedCmd));
+					} else {
+						break _v0$8;
+					}
 				default:
-					break _v0$6;
+					var path = _v0.a.a;
+					var _v8 = $author$project$Page$NewWarning$init(path);
+					var updatedPageModel = _v8.a;
+					var updatedCmd = _v8.b;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								m: $author$project$Main$NewPage(updatedPageModel)
+							}),
+						A2($elm$core$Platform$Cmd$map, $author$project$Main$NewPageMsg, updatedCmd));
 			}
 		}
 		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -6739,11 +6946,19 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
+var $elm$html$Html$header = _VirtualDom_node('header');
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$tbody = _VirtualDom_node('tbody');
 var $elm$html$Html$td = _VirtualDom_node('td');
@@ -6781,7 +6996,7 @@ var $author$project$Page$ListWarnings$viewWarning = function (warning) {
 								_List_fromArray(
 									[
 										$elm$html$Html$text(
-										$elm$core$String$fromInt(warning.aO))
+										$elm$core$String$fromInt(warning.aP))
 									]))
 							])),
 						A2(
@@ -6802,7 +7017,7 @@ var $author$project$Page$ListWarnings$viewWarning = function (warning) {
 								_List_fromArray(
 									[
 										$elm$html$Html$text(
-										$elm$core$String$fromInt(warning.aR))
+										$elm$core$String$fromInt(warning.aS))
 									]))
 							])),
 						A2(
@@ -6822,14 +7037,38 @@ var $author$project$Page$ListWarnings$viewWarning = function (warning) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$text(warning.aw)
+										$elm$html$Html$text(warning.ax)
 									]))
 							]))
 					]))
 			]));
 };
+var $author$project$Page$ListWarnings$viewWarnings = function (warnings) {
+	return $elm$core$List$isEmpty(warnings) ? _List_fromArray(
+		[
+			A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('center')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$h2,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('error')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('No user warnings have been created for this video')
+						]))
+				]))
+		]) : A2($elm$core$List$map, $author$project$Page$ListWarnings$viewWarning, warnings);
+};
 var $author$project$Page$ListWarnings$view = function (model) {
-	var _v0 = model.G;
+	var _v0 = model.H;
 	switch (_v0.$) {
 		case 0:
 			return $elm$html$Html$text('');
@@ -6843,25 +7082,278 @@ var $author$project$Page$ListWarnings$view = function (model) {
 					[
 						$elm$html$Html$Attributes$id('warnings')
 					]),
-				A2($elm$core$List$map, $author$project$Page$ListWarnings$viewWarning, warnings));
+				$author$project$Page$ListWarnings$viewWarnings(warnings));
 		default:
-			return $elm$html$Html$text('Internal Error');
+			return A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('center')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$h2,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('error')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Internal Error')
+							]))
+					]));
 	}
 };
-var $author$project$Main$ClickCreate = function (a) {
+var $author$project$Page$NewWarning$InputDescription = function (a) {
+	return {$: 4, a: a};
+};
+var $author$project$Page$NewWarning$InputStart = function (a) {
+	return {$: 2, a: a};
+};
+var $author$project$Page$NewWarning$InputStop = function (a) {
 	return {$: 3, a: a};
 };
-var $author$project$Main$ClickList = function (a) {
+var $author$project$Page$NewWarning$SubmitWarning = {$: 1};
+var $elm$html$Html$form = _VirtualDom_node('form');
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $elm$html$Html$Events$alwaysPreventDefault = function (msg) {
+	return _Utils_Tuple2(msg, true);
+};
+var $elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
 	return {$: 2, a: a};
+};
+var $elm$html$Html$Events$preventDefaultOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayPreventDefault(decoder));
+	});
+var $elm$html$Html$Events$onSubmit = function (msg) {
+	return A2(
+		$elm$html$Html$Events$preventDefaultOn,
+		'submit',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysPreventDefault,
+			$elm$json$Json$Decode$succeed(msg)));
+};
+var $author$project$Page$NewWarning$stringFromMaybeInt = function (num) {
+	if (!num.$) {
+		var n = num.a;
+		return $elm$core$String$fromInt(n);
+	} else {
+		return '';
+	}
+};
+var $elm$html$Html$textarea = _VirtualDom_node('textarea');
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Page$NewWarning$viewError = function (err) {
+	if (!err.$) {
+		var e = err.a;
+		return A2(
+			$elm$html$Html$h2,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('error')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text(e)
+				]));
+	} else {
+		return A2($elm$html$Html$div, _List_Nil, _List_Nil);
+	}
+};
+var $author$project$Page$NewWarning$viewInput = F3(
+	function (t, v, toMsg) {
+		return A2(
+			$elm$html$Html$input,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$type_(t),
+					$elm$html$Html$Attributes$value(v),
+					$elm$html$Html$Events$onInput(toMsg)
+				]),
+			_List_Nil);
+	});
+var $author$project$Page$NewWarning$viewForm = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('center'),
+				$elm$html$Html$Attributes$id('warning-form-container')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$form,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('warning-form'),
+						$elm$html$Html$Events$onSubmit($author$project$Page$NewWarning$SubmitWarning)
+					]),
+				_List_fromArray(
+					[
+						$author$project$Page$NewWarning$viewError(model.t),
+						A2(
+						$elm$html$Html$label,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Start Time')
+							])),
+						A3(
+						$author$project$Page$NewWarning$viewInput,
+						'number',
+						$author$project$Page$NewWarning$stringFromMaybeInt(model.aP),
+						$author$project$Page$NewWarning$InputStart),
+						A2(
+						$elm$html$Html$label,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Stop Time')
+							])),
+						A3(
+						$author$project$Page$NewWarning$viewInput,
+						'number',
+						$author$project$Page$NewWarning$stringFromMaybeInt(model.aS),
+						$author$project$Page$NewWarning$InputStop),
+						A2(
+						$elm$html$Html$label,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Description')
+							])),
+						A2(
+						$elm$html$Html$textarea,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value(
+								A2($elm$core$Maybe$withDefault, '', model.ax)),
+								$elm$html$Html$Events$onInput($author$project$Page$NewWarning$InputDescription)
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$input,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('submit'),
+								$elm$html$Html$Attributes$type_('submit')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Submit')
+							]))
+					]))
+			]));
+};
+var $author$project$Page$NewWarning$view = function (model) {
+	if (!model.$) {
+		var f = model.a;
+		return $author$project$Page$NewWarning$viewForm(f);
+	} else {
+		switch (model.a.$) {
+			case 1:
+				var _v1 = model.a;
+				return $elm$html$Html$text('');
+			case 0:
+				var _v2 = model.a;
+				return $elm$html$Html$text('');
+			case 2:
+				var e = model.a.a;
+				return A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('center')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$h2,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('error')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Internal Failure Loading Video')
+								]))
+						]));
+			default:
+				return A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('center')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$h2,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('success')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Warning successfully submitted')
+								]))
+						]));
+		}
+	}
+};
+var $author$project$Main$ClickList = function (a) {
+	return {$: 3, a: a};
+};
+var $author$project$Main$ClickNew = function (a) {
+	return {$: 4, a: a};
 };
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$header = _VirtualDom_node('header');
 var $elm$html$Html$menu = _VirtualDom_node('menu');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
 };
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
 var $elm$html$Html$Events$on = F2(
 	function (event, decoder) {
 		return A2(
@@ -6886,7 +7378,7 @@ var $author$project$Main$viewVideo = function (video) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text(video.aU)
+						$elm$html$Html$text('Warnings For \"' + (video.aV + '\"'))
 					])),
 				A2(
 				$elm$html$Html$menu,
@@ -6898,7 +7390,7 @@ var $author$project$Main$viewVideo = function (video) {
 						_List_fromArray(
 							[
 								$elm$html$Html$Events$onClick(
-								$author$project$Main$ClickList(video.Y))
+								$author$project$Main$ClickList(video.Z))
 							]),
 						_List_fromArray(
 							[
@@ -6909,7 +7401,7 @@ var $author$project$Main$viewVideo = function (video) {
 						_List_fromArray(
 							[
 								$elm$html$Html$Events$onClick(
-								$author$project$Main$ClickCreate(video.Y))
+								$author$project$Main$ClickNew(video.Z))
 							]),
 						_List_fromArray(
 							[
@@ -6919,72 +7411,123 @@ var $author$project$Main$viewVideo = function (video) {
 			]));
 };
 var $author$project$Main$view = function (model) {
-	var _v0 = _Utils_Tuple2(model.t, model.r);
+	var _v0 = _Utils_Tuple2(model.m, model.s);
 	switch (_v0.b.$) {
 		case 1:
 			var _v1 = _v0.b;
 			return A2(
-				$elm$html$Html$h2,
+				$elm$html$Html$header,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('loading')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Loading Video Data')
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('center')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('')
+							]))
 					]));
 		case 2:
 			var e = _v0.b.a;
 			return A2(
-				$elm$html$Html$h2,
+				$elm$html$Html$header,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('error')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Internal Failure Loading Video')
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('center')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h2,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('error')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Internal Failure Loading Video')
+									]))
+							]))
 					]));
 		case 0:
 			var _v2 = _v0.b;
 			return A2(
-				$elm$html$Html$h2,
+				$elm$html$Html$header,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('error')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Page does not appear to be a YouTube video')
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('center')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h2,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('error')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Page does not appear to be a YouTube video')
+									]))
+							]))
 					]));
 		default:
-			if (!_v0.a.$) {
-				var _v3 = _v0.a;
-				var video = _v0.b.a;
-				return A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$author$project$Main$viewVideo(video)
-						]));
-			} else {
-				var pageModel = _v0.a.a;
-				var video = _v0.b.a;
-				return A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$author$project$Main$viewVideo(video),
-							A2(
-							$elm$html$Html$map,
-							$author$project$Main$ListPageMsg,
-							$author$project$Page$ListWarnings$view(pageModel))
-						]));
+			switch (_v0.a.$) {
+				case 0:
+					var _v3 = _v0.a;
+					var video = _v0.b.a;
+					return A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$author$project$Main$viewVideo(video)
+							]));
+				case 1:
+					var pageModel = _v0.a.a;
+					var video = _v0.b.a;
+					return A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$author$project$Main$viewVideo(video),
+								A2(
+								$elm$html$Html$map,
+								$author$project$Main$ListPageMsg,
+								$author$project$Page$ListWarnings$view(pageModel))
+							]));
+				default:
+					var pageModel = _v0.a.a;
+					var video = _v0.b.a;
+					return A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$author$project$Main$viewVideo(video),
+								A2(
+								$elm$html$Html$map,
+								$author$project$Main$NewPageMsg,
+								$author$project$Page$NewWarning$view(pageModel))
+							]));
 			}
 	}
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{aE: $author$project$Main$init, aS: $author$project$Main$subscriptions, aV: $author$project$Main$update, aX: $author$project$Main$view});
+	{aF: $author$project$Main$init, aT: $author$project$Main$subscriptions, aW: $author$project$Main$update, aY: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main($elm$json$Json$Decode$string)(0)}});}(this));

@@ -46,7 +46,8 @@ createVideo : YouTubeId -> Cmd Msg
 createVideo id =
     Http.post
         { url = url [ "videos" ] []
-        , body = Http.jsonBody (Encode.object [ ( "vid", Encode.string id ) ])
+        , body =
+            Http.jsonBody (Encode.object [ ( "vid", Encode.string id ) ])
         , expect =
             Http.expectWhatever
                 (Result.map (\_ -> id) >> RemoteData.fromResult >> CreatedVideo)
