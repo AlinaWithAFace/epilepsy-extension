@@ -1,6 +1,6 @@
 module Error exposing (toString, view)
 
-import Html exposing (Html, div, h2, text)
+import Html exposing (Html, h2, text)
 import Html.Attributes exposing (class)
 import Http
 

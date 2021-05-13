@@ -2,7 +2,7 @@ module Page.ListWarnings exposing (Model, Msg, init, update, view)
 
 import Api exposing (Path, url)
 import Error
-import Html exposing (Html, div, h2, table, tbody, td, text, th, tr)
+import Html exposing (Html, div, table, tbody, td, text, th, tr)
 import Html.Attributes exposing (class, id)
 import Http
 import Json.Decode as Decode exposing (Decoder)

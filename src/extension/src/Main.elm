@@ -4,7 +4,7 @@ import Api exposing (Path, url)
 import Browser
 import Error
 import Http
-import Html exposing (Html, button, div, h2, header, menu, p, text)
+import Html exposing (Html, button, div, header, menu, text)
 import Html.Attributes exposing (class, id)
 import Html.Events exposing (onClick)
 import Page.ListWarnings as ListWarnings
