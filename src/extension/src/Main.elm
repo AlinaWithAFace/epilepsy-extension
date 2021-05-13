@@ -1,15 +1,26 @@
 module Main exposing (main)
 
-import Api exposing (Path)
+import Api exposing (Path, url)
 import Browser
 import Error
+import Http
 import Html exposing (Html, button, div, h2, header, menu, p, text)
 import Html.Attributes exposing (class, id)
 import Html.Events exposing (onClick)
 import Page.ListWarnings as ListWarnings
 import Page.NewWarning as NewWarning
 import RemoteData exposing (WebData)
-import Video exposing (Msg(..), Video, createVideo, getVideo)
+import Json.Decode as Decode
+import Json.Encode as Encode
+import Url exposing (Url)
+import Url.Builder
+import Url.Parser as Parser exposing ((<?>))
+import Url.Parser.Query as Query
+import Video exposing (Video, YouTubeId)
+
+
+
+-- MAIN
 
 
 main =
@@ -19,6 +30,10 @@ main =
         , subscriptions = subscriptions
         , view = view
         }
+
+
+
+-- MODEL
 
 
 type Page
@@ -33,88 +48,17 @@ type alias Model =
     }
 
 
-init : String -> ( Model, Cmd Msg )
-init videoURL =
-    case Video.parseYouTubeId videoURL of
-        Just id ->
-            ( { video = RemoteData.Loading, page = EmptyPage }
-            , Cmd.map VideoMsg (getVideo id)
-            )
 
-        Nothing ->
-            ( { video = RemoteData.NotAsked, page = EmptyPage }, Cmd.none )
-
-
-type Msg
-    = VideoMsg Video.Msg
-    | ListPageMsg ListWarnings.Msg
-    | NewPageMsg NewWarning.Msg
-    | ClickList Path
-    | ClickNew Path
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case ( msg, model.page ) of
-        ( VideoMsg (GotVideo video), EmptyPage ) ->
-            ( { model | video = video }, Cmd.none )
-
-        ( VideoMsg (CreatedVideo (RemoteData.Success id)), EmptyPage ) ->
-            ( { model | video = RemoteData.Loading }
-            , Cmd.map VideoMsg (getVideo id)
-            )
-
-        ( VideoMsg (CreatedVideo (RemoteData.Failure e)), EmptyPage ) ->
-            ( { model | video = RemoteData.NotAsked }, Cmd.none )
-
-        ( VideoMsg (VideoNotFound id), EmptyPage ) ->
-            ( { model | video = RemoteData.Loading }
-            , Cmd.map VideoMsg (createVideo id)
-            )
-
-        ( ListPageMsg subMsg, ListPage pageModel ) ->
-            let
-                ( updatedPageModel, updatedCmd ) =
-                    ListWarnings.update subMsg pageModel
-            in
-            ( { model | page = ListPage updatedPageModel }
-            , Cmd.map ListPageMsg updatedCmd
-            )
-
-        ( ClickList path, _ ) ->
-            let
-                ( updatedPageModel, updatedCmd ) =
-                    ListWarnings.init path
-            in
-            ( { model | page = ListPage updatedPageModel }
-            , Cmd.map ListPageMsg updatedCmd
-            )
-
-        ( NewPageMsg subMsg, NewPage pageModel ) ->
-            let
-                ( updatedPageModel, updatedCmd ) =
-                    NewWarning.update subMsg pageModel
-            in
-            ( { model | page = NewPage updatedPageModel }
-            , Cmd.map NewPageMsg updatedCmd
-            )
-
-        ( ClickNew path, _ ) ->
-            let
-                ( updatedPageModel, updatedCmd ) =
-                    NewWarning.init path
-            in
-            ( { model | page = NewPage updatedPageModel }
-            , Cmd.map NewPageMsg updatedCmd
-            )
-
-        _ ->
-            ( model, Cmd.none )
+-- SUBSCRIPTIONS
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
+
+
+
+-- VIEW
 
 
 view : Model -> Html Msg
@@ -163,3 +107,149 @@ viewVideo video =
                 [ text "Create New Warnings" ]
             ]
         ]
+
+
+
+-- INIT
+
+
+init : String -> ( Model, Cmd Msg )
+init videoURL =
+    case parseYouTubeId videoURL of
+        Just id ->
+            ( { video = RemoteData.Loading, page = EmptyPage }
+            , getVideo id
+            )
+
+        Nothing ->
+            ( { video = RemoteData.NotAsked, page = EmptyPage }, Cmd.none )
+
+
+urlParseYouTubeId : Url -> Maybe String
+urlParseYouTubeId str =
+    Maybe.withDefault Nothing <|
+        Parser.parse (Parser.s "watch" <?> Query.string "v") str
+
+
+parseYouTubeId : String -> Maybe String
+parseYouTubeId urlString =
+    Url.fromString urlString |> Maybe.andThen urlParseYouTubeId
+
+
+
+-- UPDATE
+
+
+type Msg
+    = GotVideo (WebData Video)
+    | CreatedVideo (WebData YouTubeId)
+    | VideoNotFound YouTubeId
+    | ListPageMsg ListWarnings.Msg
+    | NewPageMsg NewWarning.Msg
+    | ClickList Path
+    | ClickNew Path
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case ( msg, model.page ) of
+        ( GotVideo video, EmptyPage ) ->
+            ( { model | video = video }, Cmd.none )
+
+        ( CreatedVideo (RemoteData.Success id), EmptyPage ) ->
+            ( { model | video = RemoteData.Loading }
+            , getVideo id
+            )
+
+        ( CreatedVideo (RemoteData.Failure e), EmptyPage ) ->
+            ( { model | video = RemoteData.NotAsked }, Cmd.none )
+
+        ( VideoNotFound id, EmptyPage ) ->
+            ( { model | video = RemoteData.Loading }
+            , createVideo id
+            )
+
+        ( ListPageMsg subMsg, ListPage pageModel ) ->
+            let
+                ( updatedPageModel, updatedCmd ) =
+                    ListWarnings.update subMsg pageModel
+            in
+            ( { model | page = ListPage updatedPageModel }
+            , Cmd.map ListPageMsg updatedCmd
+            )
+
+        ( ClickList path, _ ) ->
+            let
+                ( updatedPageModel, updatedCmd ) =
+                    ListWarnings.init path
+            in
+            ( { model | page = ListPage updatedPageModel }
+            , Cmd.map ListPageMsg updatedCmd
+            )
+
+        ( NewPageMsg subMsg, NewPage pageModel ) ->
+            let
+                ( updatedPageModel, updatedCmd ) =
+                    NewWarning.update subMsg pageModel
+            in
+            ( { model | page = NewPage updatedPageModel }
+            , Cmd.map NewPageMsg updatedCmd
+            )
+
+        ( ClickNew path, _ ) ->
+            let
+                ( updatedPageModel, updatedCmd ) =
+                    NewWarning.init path
+            in
+            ( { model | page = NewPage updatedPageModel }
+            , Cmd.map NewPageMsg updatedCmd
+            )
+
+        _ ->
+            ( model, Cmd.none )
+
+
+resultToMsg : YouTubeId -> Result Http.Error Video -> Msg
+resultToMsg id result =
+    case result of
+        Err (Http.BadStatus 404) ->
+            VideoNotFound id
+
+        _ ->
+            GotVideo (RemoteData.fromResult result)
+
+
+getVideo : YouTubeId -> Cmd Msg
+getVideo id =
+    Http.get
+        { url = url [ "videos" ] [ Url.Builder.string "vid" id ]
+        , expect = Http.expectJson (resultToMsg id) decodeVideo
+        }
+
+
+decodeVideo : Decode.Decoder Video
+decodeVideo =
+    Decode.index 0 (Decode.map2 Video decodeYouTubeId decodePath)
+
+
+decodeYouTubeId : Decode.Decoder YouTubeId
+decodeYouTubeId =
+    Decode.field "video_vid" Decode.string
+
+
+decodePath : Decode.Decoder Path
+decodePath =
+    Decode.map (\id -> [ "videos" ] ++ [ String.fromInt id ])
+        (Decode.field "video_id" Decode.int)
+
+
+createVideo : YouTubeId -> Cmd Msg
+createVideo id =
+    Http.post
+        { url = url [ "videos" ] []
+        , body =
+            Http.jsonBody (Encode.object [ ( "vid", Encode.string id ) ])
+        , expect =
+            Http.expectWhatever
+                (Result.map (\_ -> id) >> RemoteData.fromResult >> CreatedVideo)
+        }

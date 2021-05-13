@@ -1,11 +1,11 @@
-module Page.ListWarnings exposing (Model, Msg(..), init, update, view)
+module Page.ListWarnings exposing (Model, Msg, init, update, view)
 
 import Api exposing (Path, url)
 import Error
 import Html exposing (Html, div, h2, table, tbody, td, text, th, tr)
 import Html.Attributes exposing (class, id)
 import Http
-import Json.Decode as Decode
+import Json.Decode as Decode exposing (Decoder)
 import RemoteData exposing (WebData)
 import Time exposing (Time)
 import Warning exposing (Warning)
@@ -18,18 +18,16 @@ type alias Model =
 
 init : Path -> ( Model, Cmd Msg )
 init path =
-    ( { warnings = RemoteData.Loading }, getWarnings path )
+    ( { warnings = RemoteData.Loading }, getAllWarnings path )
 
 
-type Msg
-    = GotWarnings (WebData (List Warning))
+type alias Msg =
+    WebData (List Warning)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        GotWarnings response ->
-            ( { model | warnings = response }, Cmd.none )
+    ( { model | warnings = msg }, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -78,18 +76,18 @@ viewWarning warning =
         ]
 
 
-getWarnings : Path -> Cmd Msg
-getWarnings path =
+getAllWarnings : Path -> Cmd Msg
+getAllWarnings path =
     Http.get
         { url = url (path ++ [ "warnings" ]) []
         , expect =
             Http.expectJson
-                (RemoteData.fromResult >> GotWarnings)
+                RemoteData.fromResult
                 decodeWarnings
         }
 
 
-decodeWarning : Decode.Decoder Warning
+decodeWarning : Decoder Warning
 decodeWarning =
     Decode.map3
         Warning
