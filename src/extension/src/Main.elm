@@ -2,7 +2,7 @@ module Main exposing (main)
 
 import Api exposing (Path)
 import Browser
-import Html exposing (Html, button, div, h1, h2, header, menu, p, text)
+import Html exposing (Html, button, div, h2, header, menu, p, text)
 import Html.Attributes exposing (class, id)
 import Html.Events exposing (onClick)
 import Page.ListWarnings as ListWarnings
@@ -173,8 +173,7 @@ view model =
 viewVideo : Video -> Html Msg
 viewVideo video =
     header []
-        [ h1 [] [ text ("Warnings For \"" ++ video.title ++ "\"") ]
-        , menu []
+        [ menu []
             [ button
                 [ onClick (ClickList video.path) ]
                 [ text "Show Warnings" ]

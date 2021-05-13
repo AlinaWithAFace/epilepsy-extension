@@ -7813,7 +7813,6 @@ var $author$project$Main$ClickNew = function (a) {
 	return {$: 4, a: a};
 };
 var $elm$html$Html$button = _VirtualDom_node('button');
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$menu = _VirtualDom_node('menu');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
@@ -7837,13 +7836,6 @@ var $author$project$Main$viewVideo = function (video) {
 		_List_Nil,
 		_List_fromArray(
 			[
-				A2(
-				$elm$html$Html$h1,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Warnings For \"' + (video.bg + '\"'))
-					])),
 				A2(
 				$elm$html$Html$menu,
 				_List_Nil,
