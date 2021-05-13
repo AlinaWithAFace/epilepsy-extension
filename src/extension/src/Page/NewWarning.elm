@@ -19,29 +19,25 @@ import Time exposing (Time)
 import Warning exposing (Warning)
 
 
-type alias Form =
+type alias Model =
     { path : Path
     , start : String
     , stop : String
     , description : String
     , error : Maybe String
+    , response : WebData ()
     }
-
-
-type Model
-    = InProgress Form
-    | Success (WebData ())
 
 
 init : Path -> ( Model, Cmd Msg )
 init path =
-    ( InProgress
-        { path = path
-        , start = ""
-        , stop = ""
-        , description = ""
-        , error = Nothing
-        }
+    ( { path = path
+      , start = ""
+      , stop = ""
+      , description = ""
+      , error = Nothing
+      , response = RemoteData.NotAsked
+      }
     , Cmd.none
     )
 
@@ -56,56 +52,48 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case ( msg, model ) of
-        ( CreatedWarning w, Success _ ) ->
-            ( Success w, Cmd.none )
+    case ( msg, model.response ) of
+        ( CreatedWarning (RemoteData.Failure (Http.BadStatus 400)), _ ) ->
+            ( { model | response = RemoteData.NotAsked, error = Just "Start time must be earlier than stop time" }, Cmd.none )
 
-        ( _, Success _ ) ->
-            ( model, Cmd.none )
+        ( CreatedWarning w, _ ) ->
+            ( { model | response = w }, Cmd.none )
 
-        (SubmitWarning, InProgress form) ->
-            case ( Time.fromString form.start, Time.fromString form.stop ) of
+        ( SubmitWarning, RemoteData.NotAsked ) ->
+            case ( Time.fromString model.start, Time.fromString model.stop ) of
                 ( Just start, Just stop ) ->
-                    ( Success RemoteData.Loading
+                    ( { model | response = RemoteData.Loading }
                     , createWarning
-                        form.path
+                        model.path
                         { start = start
                         , stop = stop
-                        , description = form.description
+                        , description = model.description
                         }
                     )
 
                 ( Nothing, Nothing ) ->
-                    ( InProgress
-                        { form | error = Just "Failed to parse times" }
+                    ( { model | error = Just "Failed to parse times" }
                     , Cmd.none
                     )
 
                 ( Nothing, _ ) ->
-                    ( InProgress
-                        { form | error = Just "Failed to parse start time" }
+                    ( { model | error = Just "Failed to parse start time" }
                     , Cmd.none
                     )
 
                 ( _, Nothing ) ->
-                    ( InProgress
-                        { form | error = Just "Failed to parse stop time" }
+                    ( { model | error = Just "Failed to parse stop time" }
                     , Cmd.none
                     )
 
-        ( InputStart s, InProgress form ) ->
-            ( InProgress
-                { form | start = s }
-            , Cmd.none
-            )
-        ( InputStop s, InProgress form ) ->
-            ( InProgress
-                { form | stop = s }
-            , Cmd.none
-            )
+        ( InputStart s, RemoteData.NotAsked ) ->
+            ( { model | start = s }, Cmd.none )
 
-        ( InputDescription s, InProgress form ) ->
-            ( InProgress { form | description = s }, Cmd.none )
+        ( InputStop s, RemoteData.NotAsked ) ->
+            ( { model | stop = s }, Cmd.none )
+
+        ( InputDescription s, RemoteData.NotAsked ) ->
+            ( { model | description = s }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -123,26 +111,23 @@ stringFromMaybeInt num =
 
 view : Model -> Html Msg
 view model =
-    case model of
-        InProgress f ->
-            viewForm f
-
-        Success RemoteData.Loading ->
+    case model.response of
+        RemoteData.Loading ->
             text ""
 
-        Success RemoteData.NotAsked ->
-            text ""
+        RemoteData.NotAsked ->
+            viewForm model
 
-        Success (RemoteData.Failure e) ->
+        RemoteData.Failure e ->
             div [ class "center" ]
-                [ h2 [ class "error" ] [ text "Start time must be earlier than stop time" ] ]
+                [ h2 [ class "error" ] [ text "Error" ] ]
 
-        Success (RemoteData.Success _) ->
+        RemoteData.Success _ ->
             div [ class "center" ]
                 [ h2 [ class "success" ] [ text "Warning successfully submitted" ] ]
 
 
-viewForm : Form -> Html Msg
+viewForm : Model -> Html Msg
 viewForm model =
     div [ class "center", id "warning-form-container" ]
         [ form [ class "warning-form", onSubmit SubmitWarning ]
@@ -153,7 +138,7 @@ viewForm model =
                 InputStart
             , label [] [ text "Stop Time" ]
             , timeInput
-                 model.stop
+                model.stop
                 InputStop
             , label [] [ text "Description" ]
             , textarea
