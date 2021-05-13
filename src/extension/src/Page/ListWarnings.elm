@@ -45,7 +45,7 @@ view model =
 
         RemoteData.Failure _ ->
             div [ class "center" ]
-                [ h2 [ class "error" ] [ text "Internal Error" ] ]
+                [ h2 [ class "error" ] [ text "Error" ] ]
 
 
 viewWarnings : List Warning -> List (Html Msg)

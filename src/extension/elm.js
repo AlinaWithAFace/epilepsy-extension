@@ -7564,7 +7564,7 @@ var $author$project$Page$ListWarnings$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Internal Error')
+								$elm$html$Html$text('Error')
 							]))
 					]));
 	}
