@@ -1,7 +1,9 @@
 module Main exposing (main)
 
+import Api exposing (Path)
 import Browser
-import Html exposing (Html, button, div, h1, p, text)
+import Html exposing (Html, button, div, h1, h2, header, menu, p, text)
+import Html.Attributes exposing (class, id)
 import Html.Events exposing (onClick)
 import Page.ListWarnings as ListWarnings
 import RemoteData exposing (WebData)
@@ -9,7 +11,6 @@ import Url
 import Url.Parser exposing ((</>), (<?>))
 import Url.Parser.Query
 import Video exposing (Msg(..), Video, createVideo, getVideo)
-import Warning exposing (Warning)
 
 
 main =
@@ -41,7 +42,9 @@ init videoURL =
         parseYouTubeId urlString =
             case Url.fromString urlString of
                 Just url ->
-                    Maybe.withDefault Nothing (Url.Parser.parse youTubeIdParser url)
+                    Maybe.withDefault
+                        Nothing
+                        (Url.Parser.parse youTubeIdParser url)
 
                 Nothing ->
                     Nothing
@@ -59,7 +62,8 @@ init videoURL =
 type Msg
     = VideoMsg Video.Msg
     | ListPageMsg ListWarnings.Msg
-    | ClickList (List String)
+    | ClickList Path
+    | ClickCreate Path
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -89,7 +93,8 @@ update msg model =
             ( { model | page = ListPage updatedPageModel }
             , Cmd.map ListPageMsg updatedCmd
             )
-        ( ClickList path, _) ->
+
+        ( ClickList path, _ ) ->
             let
                 ( updatedPageModel, updatedCmd ) =
                     ListWarnings.init path
@@ -97,7 +102,6 @@ update msg model =
             ( { model | page = ListPage updatedPageModel }
             , Cmd.map ListPageMsg updatedCmd
             )
-
 
         ( _, _ ) ->
             ( model, Cmd.none )
@@ -112,28 +116,37 @@ view : Model -> Html Msg
 view model =
     case ( model.page, model.video ) of
         ( _, RemoteData.Loading ) ->
-            text "Loading Video Data"
+            h2 [ class "loading" ] [ text "Loading Video Data" ]
 
         ( _, RemoteData.Failure e ) ->
-            text "Internal Failure Loading Video"
+            h2 [ class "error" ] [ text "Internal Failure Loading Video" ]
 
         ( _, RemoteData.NotAsked ) ->
-            text "Page does not appear to be a YouTube video"
+            h2
+                [ class "error" ]
+                [ text "Page does not appear to be a YouTube video" ]
 
         ( EmptyPage, RemoteData.Success video ) ->
-            viewVideo video
+            div []
+                [ viewVideo video ]
 
-        (ListPage pageModel, RemoteData.Success video) ->
+        ( ListPage pageModel, RemoteData.Success video ) ->
             div []
                 [ viewVideo video
                 , Html.map ListPageMsg (ListWarnings.view pageModel)
                 ]
 
 
-
 viewVideo : Video -> Html Msg
 viewVideo video =
-    div []
-        [ h1 [] [ text video.title ]
-        , button [ onClick (ClickList video.path)] [ text "Display Warnings" ]
+    header []
+        [ h1 [] [text video.title]
+        , menu []
+            [ button
+                [ onClick (ClickList video.path) ]
+                [ text "Show Warnings" ]
+            , button
+                [ onClick (ClickCreate video.path) ]
+                [ text "Create New Warnings" ]
+            ]
         ]

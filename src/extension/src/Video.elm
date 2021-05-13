@@ -1,6 +1,6 @@
 module Video exposing (Msg(..), Video, createVideo, getVideo)
 
-import Api exposing (url)
+import Api exposing (url, Path)
 import Http
 import RemoteData exposing (WebData)
 import Url.Builder
@@ -10,7 +10,7 @@ import Json.Encode as Encode
 
 type alias Video =
     { title : String
-    , path : List String
+    , path : Path
     }
 
 
@@ -63,7 +63,7 @@ decodeTitle =
     Decode.field "video_title" Decode.string
 
 
-decodePath : Decode.Decoder (List String)
+decodePath : Decode.Decoder Path
 decodePath =
     Decode.map (\id -> ([ "videos" ] ++ [ String.fromInt id ]))
         (Decode.field "video_id" Decode.int)

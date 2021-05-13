@@ -1,8 +1,8 @@
 module Page.ListWarnings exposing (Model, Msg(..), init, update, view)
 
-import Api exposing (url)
-import Html exposing (Html, div, p, strong, text, br)
-import Html.Attributes exposing (style)
+import Api exposing (Path, url)
+import Html exposing (Html, br, div, h2, p, strong, table, tbody, td, text, th, tr)
+import Html.Attributes exposing (class, id)
 import Http
 import Json.Decode as Decode
 import RemoteData exposing (WebData)
@@ -14,7 +14,7 @@ type alias Model =
     }
 
 
-init : List String -> ( Model, Cmd Msg )
+init : Path -> ( Model, Cmd Msg )
 init path =
     ( { warnings = RemoteData.Loading }, getWarnings path )
 
@@ -37,10 +37,10 @@ view model =
             text ""
 
         RemoteData.Loading ->
-            text "Loading warnings..."
+            text ""
 
         RemoteData.Success warnings ->
-            div [] (List.map viewWarning warnings)
+            div [ id "warnings" ] (List.map viewWarning warnings)
 
         RemoteData.Failure _ ->
             text "Internal Error"
@@ -48,19 +48,25 @@ view model =
 
 viewWarning : Warning -> Html Msg
 viewWarning warning =
-    div [ style "border-top" "1px solid #000000" ]
-        [ strong [] [ text "Start: " ]
-        , text (String.fromInt warning.start)
-        , br [] []
-        , strong [] [ text "Stop: " ]
-        , text (String.fromInt warning.stop)
-        , br [] []
-        , strong [] [ text "Description: " ]
-        , text warning.description
+    table [ class "warning" ]
+        [ tbody []
+            [ tr []
+                [ th [] [ text "Start" ]
+                , td [] [ text (String.fromInt warning.start) ]
+                ]
+            , tr []
+                [ th [] [ text "Stop" ]
+                , td [] [ text (String.fromInt warning.stop) ]
+                ]
+            , tr []
+                [ th [] [ text "Description" ]
+                , td [] [ text warning.description ]
+                ]
+            ]
         ]
 
 
-getWarnings : List String -> Cmd Msg
+getWarnings : Path -> Cmd Msg
 getWarnings path =
     Http.get
         { url = url (path ++ [ "warnings" ]) []
