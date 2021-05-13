@@ -17,6 +17,7 @@ import Json.Encode as Encode
 import RemoteData exposing (WebData)
 import Time exposing (Time)
 import Warning exposing (Warning)
+import Error
 
 
 type alias Model =
@@ -72,7 +73,7 @@ update msg model =
                     )
 
                 ( Nothing, Nothing ) ->
-                    ( { model | error = Just "Failed to parse times" }
+                    ( { model | error = Just "Failed to parse start/stop times" }
                     , Cmd.none
                     )
 
@@ -120,7 +121,7 @@ view model =
 
         RemoteData.Failure e ->
             div [ class "center" ]
-                [ h2 [ class "error" ] [ text "Error" ] ]
+                [ h2 [ class "error" ] [ text (Error.toString e) ] ]
 
         RemoteData.Success _ ->
             div [ class "center" ]

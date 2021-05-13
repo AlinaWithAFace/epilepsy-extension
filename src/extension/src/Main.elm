@@ -12,6 +12,7 @@ import Url
 import Url.Parser exposing ((</>), (<?>))
 import Url.Parser.Query
 import Video exposing (Msg(..), Video, createVideo, getVideo)
+import Error
 
 
 main =
@@ -140,7 +141,7 @@ view model =
             header [] [ div [ class "center" ] [ text "" ] ]
 
         ( _, RemoteData.Failure e ) ->
-            header [] [ div [ class "center" ] [ h2 [ class "error" ] [ text "Failure Loading Video" ] ] ]
+            header [] [ div [ class "center" ] [ h2 [ class "error" ] [ text (Error.toString e) ] ] ]
 
         ( _, RemoteData.NotAsked ) ->
             header []

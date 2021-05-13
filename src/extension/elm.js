@@ -7221,7 +7221,7 @@ var $author$project$Page$NewWarning$update = F2(
 									_Utils_update(
 										model,
 										{
-											x: $elm$core$Maybe$Just('Failed to parse times')
+											x: $elm$core$Maybe$Just('Failed to parse start/stop times')
 										}),
 									$elm$core$Platform$Cmd$none);
 							} else {
@@ -7411,6 +7411,24 @@ var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$Error$toString = function (err) {
+	return 'HTTP Error: ' + function () {
+		switch (err.$) {
+			case 0:
+				var s = err.a;
+				return 'Illegal Url \"' + (s + '\"');
+			case 1:
+				return 'Timeout';
+			case 2:
+				return 'Failed to Connect to Server';
+			case 3:
+				var i = err.a;
+				return 'Received Status \"' + ($elm$core$String$fromInt(i) + '\"');
+			default:
+				return 'Unexpected Response Body';
+		}
+	}();
+};
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$core$List$isEmpty = function (xs) {
 	if (!xs.b) {
@@ -7548,6 +7566,7 @@ var $author$project$Page$ListWarnings$view = function (model) {
 					]),
 				$author$project$Page$ListWarnings$viewWarnings(warnings));
 		default:
+			var e = _v0.a;
 			return A2(
 				$elm$html$Html$div,
 				_List_fromArray(
@@ -7564,7 +7583,8 @@ var $author$project$Page$ListWarnings$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Error')
+								$elm$html$Html$text(
+								$author$project$Error$toString(e))
 							]))
 					]));
 	}
@@ -7763,7 +7783,8 @@ var $author$project$Page$NewWarning$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Error')
+								$elm$html$Html$text(
+								$author$project$Error$toString(e))
 							]))
 					]));
 		default:
@@ -7900,7 +7921,8 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('Failure Loading Video')
+										$elm$html$Html$text(
+										$author$project$Error$toString(e))
 									]))
 							]))
 					]));
