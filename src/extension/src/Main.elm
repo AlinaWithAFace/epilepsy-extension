@@ -104,7 +104,7 @@ viewVideo video =
                 [ text "Show Warnings" ]
             , button
                 [ onClick (ClickNew video.path) ]
-                [ text "Create New Warnings" ]
+                [ text "Create New Warning" ]
             ]
         ]
 

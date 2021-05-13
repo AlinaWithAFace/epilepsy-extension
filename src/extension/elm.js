@@ -7844,7 +7844,7 @@ var $author$project$Main$viewVideo = function (video) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Create New Warnings')
+								$elm$html$Html$text('Create New Warning')
 							]))
 					]))
 			]));
