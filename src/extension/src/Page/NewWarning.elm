@@ -2,19 +2,28 @@ module Page.NewWarning exposing (Model, Msg(..), init, update, view)
 
 import Api exposing (Path, url)
 import Html exposing (Html, div, form, h2, input, label, text, textarea)
-import Html.Attributes exposing (id, class, placeholder, type_, value)
+import Html.Attributes
+    exposing
+        ( class
+        , id
+        , pattern
+        , placeholder
+        , type_
+        , value
+        )
 import Html.Events exposing (onInput, onSubmit)
 import Http
 import Json.Encode as Encode
 import RemoteData exposing (WebData)
+import Time exposing (Time)
 import Warning exposing (Warning)
 
 
 type alias Form =
     { path : Path
-    , start : Maybe Int
-    , stop : Maybe Int
-    , description : Maybe String
+    , start : String
+    , stop : String
+    , description : String
     , error : Maybe String
     }
 
@@ -28,9 +37,9 @@ init : Path -> ( Model, Cmd Msg )
 init path =
     ( InProgress
         { path = path
-        , start = Nothing
-        , stop = Nothing
-        , description = Nothing
+        , start = ""
+        , stop = ""
+        , description = ""
         , error = Nothing
         }
     , Cmd.none
@@ -54,41 +63,52 @@ update msg model =
         ( _, Success _ ) ->
             ( model, Cmd.none )
 
-        ( _, InProgress m ) ->
-            case ( msg, ( m.start, m.stop, m.description ) ) of
-                ( SubmitWarning, ( Just start, Just stop, Just desc ) ) ->
+        (SubmitWarning, InProgress form) ->
+            case ( Time.fromString form.start, Time.fromString form.stop ) of
+                ( Just start, Just stop ) ->
                     ( Success RemoteData.Loading
                     , createWarning
-                        m.path
+                        form.path
                         { start = start
                         , stop = stop
-                        , description = desc
+                        , description = form.description
                         }
                     )
 
-                ( SubmitWarning, ( Nothing, Just _, Just _ ) ) ->
-                    ( InProgress { m | error = Just "Missing field \"Start\n                    Time\"" }, Cmd.none )
+                ( Nothing, Nothing ) ->
+                    ( InProgress
+                        { form | error = Just "Failed to parse times" }
+                    , Cmd.none
+                    )
 
-                ( SubmitWarning, ( Just _, Nothing, Just _ ) ) ->
-                    ( InProgress { m | error = Just "Missing field \"Stop\n                    Time\"" }, Cmd.none )
+                ( Nothing, _ ) ->
+                    ( InProgress
+                        { form | error = Just "Failed to parse start time" }
+                    , Cmd.none
+                    )
 
-                ( SubmitWarning, ( Just _, Just _, Nothing ) ) ->
-                    ( InProgress { m | error = Just "Missing field\n                    \"Description\"" }, Cmd.none )
+                ( _, Nothing ) ->
+                    ( InProgress
+                        { form | error = Just "Failed to parse stop time" }
+                    , Cmd.none
+                    )
 
-                ( SubmitWarning, _ ) ->
-                    ( InProgress { m | error = Just "Missing multiple\n                    fields" }, Cmd.none )
+        ( InputStart s, InProgress form ) ->
+            ( InProgress
+                { form | start = s }
+            , Cmd.none
+            )
+        ( InputStop s, InProgress form ) ->
+            ( InProgress
+                { form | stop = s }
+            , Cmd.none
+            )
 
-                ( InputStart s, _ ) ->
-                    ( InProgress { m | start = String.toInt s }, Cmd.none )
+        ( InputDescription s, InProgress form ) ->
+            ( InProgress { form | description = s }, Cmd.none )
 
-                ( InputStop s, _ ) ->
-                    ( InProgress { m | stop = String.toInt s }, Cmd.none )
-
-                ( InputDescription s, _ ) ->
-                    ( InProgress { m | description = Just s }, Cmd.none )
-
-                ( _, _ ) ->
-                    ( InProgress m, Cmd.none )
+        _ ->
+            ( model, Cmd.none )
 
 
 stringFromMaybeInt : Maybe Int -> String
@@ -108,8 +128,6 @@ view model =
             viewForm f
 
         Success RemoteData.Loading ->
-            -- div [ class "center" ]
-            --     [ h2 [ class "loading" ] [ text "Submitting warning to database..." ] ]
             text ""
 
         Success RemoteData.NotAsked ->
@@ -117,7 +135,7 @@ view model =
 
         Success (RemoteData.Failure e) ->
             div [ class "center" ]
-                [ h2 [ class "error" ] [ text "Internal Failure Loading Video" ] ]
+                [ h2 [ class "error" ] [ text "Start time must be earlier than stop time" ] ]
 
         Success (RemoteData.Success _) ->
             div [ class "center" ]
@@ -130,19 +148,18 @@ viewForm model =
         [ form [ class "warning-form", onSubmit SubmitWarning ]
             [ viewError model.error
             , label [] [ text "Start Time" ]
-            , viewInput
-                "number"
-                (stringFromMaybeInt model.start)
+            , timeInput
+                model.start
                 InputStart
             , label [] [ text "Stop Time" ]
-            , viewInput
-                "number"
-                (stringFromMaybeInt model.stop)
+            , timeInput
+                 model.stop
                 InputStop
             , label [] [ text "Description" ]
             , textarea
-                [ value (Maybe.withDefault "" model.description)
+                [ value model.description
                 , onInput InputDescription
+                , placeholder "Description of the potential photosensitivity trigger"
                 ]
                 []
             , input [ class "submit", type_ "submit" ] [ text "Submit" ]
@@ -150,9 +167,16 @@ viewForm model =
         ]
 
 
-viewInput : String -> String -> (String -> msg) -> Html msg
-viewInput t v toMsg =
-    input [ type_ t, value v, onInput toMsg ] []
+timeInput : String -> (String -> msg) -> Html msg
+timeInput v toMsg =
+    input
+        [ pattern "[0-9]*:[0-5][0-9]"
+        , placeholder "mm:ss"
+        , type_ "text"
+        , value v
+        , onInput toMsg
+        ]
+        []
 
 
 viewError : Maybe String -> Html Msg
@@ -174,8 +198,8 @@ createWarning path warning =
         , body =
             Http.jsonBody
                 (Encode.object
-                    [ ( "start", Encode.int warning.start )
-                    , ( "stop", Encode.int warning.stop )
+                    [ ( "start", Encode.int (Time.toInt warning.start) )
+                    , ( "stop", Encode.int (Time.toInt warning.stop) )
                     , ( "description", Encode.string warning.description )
                     ]
                 )

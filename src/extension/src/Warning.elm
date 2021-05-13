@@ -1,7 +1,9 @@
 module Warning exposing(Warning)
 
+import Time exposing (Time)
+
 type alias Warning =
-  { start : Int
-  , stop : Int
+  { start : Time
+  , stop : Time
   , description : String
   }

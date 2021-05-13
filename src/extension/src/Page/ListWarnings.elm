@@ -7,6 +7,7 @@ import Http
 import Json.Decode as Decode
 import RemoteData exposing (WebData)
 import Warning exposing (Warning)
+import Time exposing (Time)
 
 
 type alias Model =
@@ -37,8 +38,6 @@ view model =
             text ""
 
         RemoteData.Loading ->
-            -- div [ class "center" ]
-            --     [ h2 [ class "loading" ] [ text "Loading Warnings..." ] ]
             text ""
 
         RemoteData.Success warnings ->
@@ -64,11 +63,11 @@ viewWarning warning =
         [ tbody []
             [ tr []
                 [ th [] [ text "Start" ]
-                , td [] [ text (String.fromInt warning.start) ]
+                , td [] [ text (Time.toString warning.start) ]
                 ]
             , tr []
                 [ th [] [ text "Stop" ]
-                , td [] [ text (String.fromInt warning.stop) ]
+                , td [] [ text (Time.toString warning.stop) ]
                 ]
             , tr []
                 [ th [] [ text "Description" ]
@@ -93,8 +92,8 @@ decodeWarning : Decode.Decoder Warning
 decodeWarning =
     Decode.map3
         Warning
-        (Decode.field "warning_start" Decode.int)
-        (Decode.field "warning_end" Decode.int)
+        (Decode.map Time.fromInt (Decode.field "warning_start" Decode.int))
+        (Decode.map Time.fromInt (Decode.field "warning_end" Decode.int))
         (Decode.field "warning_description" Decode.string)
 
 

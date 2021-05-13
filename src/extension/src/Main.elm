@@ -137,7 +137,6 @@ view : Model -> Html Msg
 view model =
     case ( model.page, model.video ) of
         ( _, RemoteData.Loading ) ->
-            -- header [] [ div [ class "center" ] [ h2 [ class "loading" ] [ text "Loading Video Data" ] ] ]
             header [] [ div [ class "center" ] [ text "" ] ]
 
         ( _, RemoteData.Failure e ) ->
