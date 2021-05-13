@@ -23,8 +23,8 @@ type alias Time =
 
 fromInt : Int -> Time
 fromInt i =
-    { minutes = modBy 60 i
-    , seconds = i // 60
+    { minutes = i // 60
+    , seconds = modBy 60 i
     }
 
 
@@ -47,13 +47,16 @@ fromString str =
                     |. chompWhile Char.isDigit
 
         time min sec =
-            case (String.toInt min, String.toInt sec) of
-                (Just m, Just s) ->
+            case ( String.toInt min, String.toInt sec ) of
+                ( Just m, Just s ) ->
                     if s < 60 then
                         Just { minutes = m, seconds = s }
+
                     else
                         Nothing
-                _ -> Nothing
+
+                _ ->
+                    Nothing
 
         parser =
             succeed time
@@ -77,6 +80,7 @@ toString t =
         seconds =
             if t.seconds < 10 then
                 "0" ++ String.fromInt t.seconds
+
             else
                 String.fromInt t.seconds
     in

@@ -6738,8 +6738,8 @@ var $author$project$Warning$Warning = F3(
 var $elm$core$Basics$modBy = _Basics_modBy;
 var $author$project$Time$fromInt = function (i) {
 	return {
-		I: A2($elm$core$Basics$modBy, 60, i),
-		A: (i / 60) | 0
+		I: (i / 60) | 0,
+		A: A2($elm$core$Basics$modBy, 60, i)
 	};
 };
 var $elm$json$Json$Decode$map3 = _Json_map3;
