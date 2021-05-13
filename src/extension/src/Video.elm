@@ -1,11 +1,14 @@
-module Video exposing (Msg(..), Video, createVideo, getVideo)
+module Video exposing (Msg(..), Video, createVideo, getVideo, parseYouTubeId)
 
-import Api exposing (url, Path)
+import Api exposing (Path, url)
 import Http
-import RemoteData exposing (WebData)
-import Url.Builder
 import Json.Decode as Decode
 import Json.Encode as Encode
+import RemoteData exposing (WebData)
+import Url exposing (Url)
+import Url.Builder
+import Url.Parser as Parser exposing ((<?>))
+import Url.Parser.Query as Query
 
 
 type alias Video =
@@ -16,6 +19,17 @@ type alias Video =
 
 type alias YouTubeId =
     String
+
+
+urlParseYouTubeId : Url -> Maybe String
+urlParseYouTubeId str =
+    Maybe.withDefault Nothing <|
+        Parser.parse (Parser.s "watch" <?> Query.string "v") str
+
+
+parseYouTubeId : String -> Maybe String
+parseYouTubeId urlString =
+    Url.fromString urlString |> Maybe.andThen urlParseYouTubeId
 
 
 type Msg
@@ -66,5 +80,5 @@ decodeTitle =
 
 decodePath : Decode.Decoder Path
 decodePath =
-    Decode.map (\id -> ([ "videos" ] ++ [ String.fromInt id ]))
+    Decode.map (\id -> [ "videos" ] ++ [ String.fromInt id ])
         (Decode.field "video_id" Decode.int)

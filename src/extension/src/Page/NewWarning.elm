@@ -1,6 +1,7 @@
 module Page.NewWarning exposing (Model, Msg(..), init, update, view)
 
 import Api exposing (Path, url)
+import Error
 import Html exposing (Html, div, form, h2, input, label, text, textarea)
 import Html.Attributes
     exposing
@@ -17,7 +18,6 @@ import Json.Encode as Encode
 import RemoteData exposing (WebData)
 import Time exposing (Time)
 import Warning exposing (Warning)
-import Error
 
 
 type alias Model =
@@ -102,12 +102,8 @@ update msg model =
 
 stringFromMaybeInt : Maybe Int -> String
 stringFromMaybeInt num =
-    case num of
-        Just n ->
-            String.fromInt n
-
-        Nothing ->
-            ""
+    Maybe.withDefault "" <|
+        Maybe.map String.fromInt num
 
 
 view : Model -> Html Msg
@@ -121,11 +117,13 @@ view model =
 
         RemoteData.Failure e ->
             div [ class "center" ]
-                [ h2 [ class "error" ] [ text (Error.toString e) ] ]
+                [ Error.view (Error.toString e) ]
 
         RemoteData.Success _ ->
             div [ class "center" ]
-                [ h2 [ class "success" ] [ text "Warning successfully submitted" ] ]
+                [ h2 [ class "success" ]
+                    [ text "Warning successfully submitted" ]
+                ]
 
 
 viewForm : Model -> Html Msg
@@ -145,7 +143,8 @@ viewForm model =
             , textarea
                 [ value model.description
                 , onInput InputDescription
-                , placeholder "Description of the potential photosensitivity trigger"
+                , placeholder
+                    "Description of why the video segment might be dangerous"
                 ]
                 []
             , input [ class "submit", type_ "submit" ] [ text "Submit" ]
@@ -167,12 +166,8 @@ timeInput v toMsg =
 
 viewError : Maybe String -> Html Msg
 viewError err =
-    case err of
-        Just e ->
-            h2 [ class "error" ] [ text e ]
-
-        Nothing ->
-            div [] []
+    Maybe.withDefault (div [] []) <|
+        Maybe.map Error.view err
 
 
 createWarning : Path -> Warning -> Cmd Msg
