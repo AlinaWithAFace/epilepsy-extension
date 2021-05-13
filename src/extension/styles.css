@@ -125,7 +125,6 @@ th {
 }
 
 .center {
-  overflow: auto;
   width:100%;
   display: flex;
   flex-direction: row;
@@ -161,7 +160,6 @@ th {
 }
 .warning-form textarea {
   resize: none;
-  height:7rem;
   width:20rem;
 }
 
