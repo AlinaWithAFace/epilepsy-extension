@@ -7526,28 +7526,31 @@ var $author$project$Page$ListWarnings$viewWarning = function (warning) {
 			]));
 };
 var $author$project$Page$ListWarnings$viewWarnings = function (warnings) {
-	return $elm$core$List$isEmpty(warnings) ? _List_fromArray(
-		[
-			A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('center')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$h2,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('error')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text('No user warnings have been created for this video')
-						]))
-				]))
-		]) : A2($elm$core$List$map, $author$project$Page$ListWarnings$viewWarning, warnings);
+	return $elm$core$List$isEmpty(warnings) ? A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('center')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$h2,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('error')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('No user warnings have been created for this video')
+					]))
+			])) : A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$id('warnings')
+			]),
+		A2($elm$core$List$map, $author$project$Page$ListWarnings$viewWarning, warnings));
 };
 var $author$project$Page$ListWarnings$view = function (model) {
 	var _v0 = model.O;
@@ -7558,13 +7561,7 @@ var $author$project$Page$ListWarnings$view = function (model) {
 			return $elm$html$Html$text('');
 		case 3:
 			var warnings = _v0.a;
-			return A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$id('warnings')
-					]),
-				$author$project$Page$ListWarnings$viewWarnings(warnings));
+			return $author$project$Page$ListWarnings$viewWarnings(warnings);
 		default:
 			var e = _v0.a;
 			return A2(
