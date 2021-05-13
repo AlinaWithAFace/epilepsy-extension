@@ -2,17 +2,14 @@ module Main exposing (main)
 
 import Api exposing (Path)
 import Browser
+import Error
 import Html exposing (Html, button, div, h2, header, menu, p, text)
 import Html.Attributes exposing (class, id)
 import Html.Events exposing (onClick)
 import Page.ListWarnings as ListWarnings
 import Page.NewWarning as NewWarning
 import RemoteData exposing (WebData)
-import Url
-import Url.Parser exposing ((</>), (<?>))
-import Url.Parser.Query
 import Video exposing (Msg(..), Video, createVideo, getVideo)
-import Error
 
 
 main =
@@ -38,21 +35,7 @@ type alias Model =
 
 init : String -> ( Model, Cmd Msg )
 init videoURL =
-    let
-        youTubeIdParser =
-            Url.Parser.s "watch" <?> Url.Parser.Query.string "v"
-
-        parseYouTubeId urlString =
-            case Url.fromString urlString of
-                Just url ->
-                    Maybe.withDefault
-                        Nothing
-                        (Url.Parser.parse youTubeIdParser url)
-
-                Nothing ->
-                    Nothing
-    in
-    case parseYouTubeId videoURL of
+    case Video.parseYouTubeId videoURL of
         Just id ->
             ( { video = RemoteData.Loading, page = EmptyPage }
             , Cmd.map VideoMsg (getVideo id)
@@ -125,7 +108,7 @@ update msg model =
             , Cmd.map NewPageMsg updatedCmd
             )
 
-        ( _, _ ) ->
+        _ ->
             ( model, Cmd.none )
 
 
@@ -141,16 +124,14 @@ view model =
             header [] [ div [ class "center" ] [ text "" ] ]
 
         ( _, RemoteData.Failure e ) ->
-            header [] [ div [ class "center" ] [ h2 [ class "error" ] [ text (Error.toString e) ] ] ]
+            header []
+                [ div [ class "center" ] [ Error.view (Error.toString e) ] ]
 
         ( _, RemoteData.NotAsked ) ->
             header []
                 [ div
                     [ class "center" ]
-                    [ h2
-                        [ class "error" ]
-                        [ text "Page does not appear to be a YouTube video" ]
-                    ]
+                    [ Error.view "Page does not appear to be a YouTube video" ]
                 ]
 
         ( EmptyPage, RemoteData.Success video ) ->

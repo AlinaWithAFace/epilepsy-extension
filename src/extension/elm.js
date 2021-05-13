@@ -6367,6 +6367,15 @@ var $author$project$Video$getVideo = function (id) {
 var $elm$core$Platform$Cmd$map = _Platform_map;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (!maybeValue.$) {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
 var $elm$url$Url$Parser$State = F5(
 	function (visited, unvisited, params, frag, value) {
 		return {y: frag, z: params, v: unvisited, r: value, D: visited};
@@ -6600,24 +6609,26 @@ var $elm$url$Url$Parser$Query$string = function (key) {
 			}
 		});
 };
+var $author$project$Video$urlParseYouTubeId = function (str) {
+	return A2(
+		$elm$core$Maybe$withDefault,
+		$elm$core$Maybe$Nothing,
+		A2(
+			$elm$url$Url$Parser$parse,
+			A2(
+				$elm$url$Url$Parser$questionMark,
+				$elm$url$Url$Parser$s('watch'),
+				$elm$url$Url$Parser$Query$string('v')),
+			str));
+};
+var $author$project$Video$parseYouTubeId = function (urlString) {
+	return A2(
+		$elm$core$Maybe$andThen,
+		$author$project$Video$urlParseYouTubeId,
+		$elm$url$Url$fromString(urlString));
+};
 var $author$project$Main$init = function (videoURL) {
-	var youTubeIdParser = A2(
-		$elm$url$Url$Parser$questionMark,
-		$elm$url$Url$Parser$s('watch'),
-		$elm$url$Url$Parser$Query$string('v'));
-	var parseYouTubeId = function (urlString) {
-		var _v1 = $elm$url$Url$fromString(urlString);
-		if (!_v1.$) {
-			var url = _v1.a;
-			return A2(
-				$elm$core$Maybe$withDefault,
-				$elm$core$Maybe$Nothing,
-				A2($elm$url$Url$Parser$parse, youTubeIdParser, url));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	};
-	var _v0 = parseYouTubeId(videoURL);
+	var _v0 = $author$project$Video$parseYouTubeId(videoURL);
 	if (!_v0.$) {
 		var id = _v0.a;
 		return _Utils_Tuple2(
@@ -7405,7 +7416,6 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $elm$html$Html$header = _VirtualDom_node('header');
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
@@ -7428,6 +7438,19 @@ var $author$project$Error$toString = function (err) {
 				return 'Unexpected Response Body';
 		}
 	}();
+};
+var $elm$html$Html$h2 = _VirtualDom_node('h2');
+var $author$project$Error$view = function (e) {
+	return A2(
+		$elm$html$Html$h2,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('error')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text(e)
+			]));
 };
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$core$List$isEmpty = function (xs) {
@@ -7534,16 +7557,7 @@ var $author$project$Page$ListWarnings$viewWarnings = function (warnings) {
 			]),
 		_List_fromArray(
 			[
-				A2(
-				$elm$html$Html$h2,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('error')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('No user warnings have been created for this video')
-					]))
+				$author$project$Error$view('No user warnings have been created for this video')
 			])) : A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -7572,17 +7586,8 @@ var $author$project$Page$ListWarnings$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						A2(
-						$elm$html$Html$h2,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('error')
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text(
-								$author$project$Error$toString(e))
-							]))
+						$author$project$Error$view(
+						$author$project$Error$toString(e))
 					]));
 	}
 };
@@ -7672,22 +7677,21 @@ var $author$project$Page$NewWarning$timeInput = F2(
 				]),
 			_List_Nil);
 	});
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
 var $author$project$Page$NewWarning$viewError = function (err) {
-	if (!err.$) {
-		var e = err.a;
-		return A2(
-			$elm$html$Html$h2,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('error')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text(e)
-				]));
-	} else {
-		return A2($elm$html$Html$div, _List_Nil, _List_Nil);
-	}
+	return A2(
+		$elm$core$Maybe$withDefault,
+		A2($elm$html$Html$div, _List_Nil, _List_Nil),
+		A2($elm$core$Maybe$map, $author$project$Error$view, err));
 };
 var $author$project$Page$NewWarning$viewForm = function (model) {
 	return A2(
@@ -7738,7 +7742,7 @@ var $author$project$Page$NewWarning$viewForm = function (model) {
 							[
 								$elm$html$Html$Attributes$value(model.aT),
 								$elm$html$Html$Events$onInput($author$project$Page$NewWarning$InputDescription),
-								$elm$html$Html$Attributes$placeholder('Description of the potential photosensitivity trigger')
+								$elm$html$Html$Attributes$placeholder('Description of why the video segment might be dangerous')
 							]),
 						_List_Nil),
 						A2(
@@ -7772,17 +7776,8 @@ var $author$project$Page$NewWarning$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						A2(
-						$elm$html$Html$h2,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('error')
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text(
-								$author$project$Error$toString(e))
-							]))
+						$author$project$Error$view(
+						$author$project$Error$toString(e))
 					]));
 		default:
 			return A2(
@@ -7902,17 +7897,8 @@ var $author$project$Main$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								A2(
-								$elm$html$Html$h2,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('error')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text(
-										$author$project$Error$toString(e))
-									]))
+								$author$project$Error$view(
+								$author$project$Error$toString(e))
 							]))
 					]));
 		case 0:
@@ -7930,16 +7916,7 @@ var $author$project$Main$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								A2(
-								$elm$html$Html$h2,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('error')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Page does not appear to be a YouTube video')
-									]))
+								$author$project$Error$view('Page does not appear to be a YouTube video')
 							]))
 					]));
 		default:

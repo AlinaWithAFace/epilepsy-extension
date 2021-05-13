@@ -10,4 +10,3 @@ type alias Path = List String
 url : Path -> List QueryParameter -> String
 url path queryParams =
     Url.Builder.crossOrigin "http://localhost:5000" ("api" :: path) queryParams
-

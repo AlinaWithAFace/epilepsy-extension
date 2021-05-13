@@ -45,18 +45,14 @@ view model =
             viewWarnings warnings
 
         RemoteData.Failure e ->
-            div [ class "center" ]
-                [ h2 [ class "error" ] [ text (Error.toString e) ] ]
+            div [ class "center" ] [ Error.view (Error.toString e) ]
 
 
 viewWarnings : List Warning -> Html Msg
 viewWarnings warnings =
     if List.isEmpty warnings then
         div [ class "center" ]
-            [ h2
-                [ class "error" ]
-                [ text "No user warnings have been created for this video" ]
-            ]
+            [ Error.view "No user warnings have been created for this video" ]
 
     else
         div [ id "warnings" ] (List.map viewWarning warnings)
