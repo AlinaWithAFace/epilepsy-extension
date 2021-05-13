@@ -15,6 +15,7 @@ env/
 /httpRequests/
 
 # data directory
-/src/data/
+/data/
 /src/model/data
-
+data/
+/data
