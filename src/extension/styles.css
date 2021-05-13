@@ -161,13 +161,14 @@ th {
 .warning-form input,textarea {
   margin:0.25rem;
   padding:0.5rem;
-  width:20rem;
   border: 1px solid #e0e0e0;
   margin-bottom:0.75rem;
+  width:20rem;
 }
 .warning-form textarea {
   resize: none;
   height:7rem;
+  width:20rem;
 }
 
 .warning-form .submit {
@@ -190,4 +191,5 @@ th {
 .warning-form .error {
   margin:0.25rem;
   margin-bottom:1rem;
+  width:19rem;
 }
