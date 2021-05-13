@@ -97,6 +97,11 @@ def create_warning(video_id):
             return Response(status=http.HTTPStatus.BAD_REQUEST)
         start = request_data["start"]
         stop = request_data["stop"]
+
+        if int(start) >= int(stop):
+            print("start:", start, "stop:", stop)
+            return Response(status=http.HTTPStatus.BAD_REQUEST)
+
         description = request_data["description"]
 
         cursor = database.execute(
@@ -116,7 +121,7 @@ def create_warning(video_id):
 
         return Response(
             headers={
-                "Location": f"/videos/{video_id}/warnings/{new_id}",
+                "Location": f"/api/videos/{video_id}/warnings/{new_id}",
             },
             status=http.HTTPStatus.CREATED,
         )
