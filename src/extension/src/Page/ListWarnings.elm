@@ -1,13 +1,14 @@
 module Page.ListWarnings exposing (Model, Msg(..), init, update, view)
 
 import Api exposing (Path, url)
+import Error
 import Html exposing (Html, div, h2, table, tbody, td, text, th, tr)
 import Html.Attributes exposing (class, id)
 import Http
 import Json.Decode as Decode
 import RemoteData exposing (WebData)
-import Warning exposing (Warning)
 import Time exposing (Time)
+import Warning exposing (Warning)
 
 
 type alias Model =
@@ -43,9 +44,9 @@ view model =
         RemoteData.Success warnings ->
             div [ id "warnings" ] (viewWarnings warnings)
 
-        RemoteData.Failure _ ->
+        RemoteData.Failure e ->
             div [ class "center" ]
-                [ h2 [ class "error" ] [ text "Error" ] ]
+                [ h2 [ class "error" ] [ text (Error.toString e) ] ]
 
 
 viewWarnings : List Warning -> List (Html Msg)
