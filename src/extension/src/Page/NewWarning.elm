@@ -135,7 +135,7 @@ view model =
 
         Success (RemoteData.Failure e) ->
             div [ class "center" ]
-                [ h2 [ class "error" ] [ text "Internal Failure Loading Video" ] ]
+                [ h2 [ class "error" ] [ text "Start time must be earlier than stop time" ] ]
 
         Success (RemoteData.Success _) ->
             div [ class "center" ]

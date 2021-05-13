@@ -7754,7 +7754,7 @@ var $author$project$Page$NewWarning$view = function (model) {
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text('Internal Failure Loading Video')
+									$elm$html$Html$text('Start time must be earlier than stop time')
 								]))
 						]));
 			default:
