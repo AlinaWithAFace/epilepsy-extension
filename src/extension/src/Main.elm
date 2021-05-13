@@ -140,7 +140,7 @@ view model =
             header [] [ div [ class "center" ] [ text "" ] ]
 
         ( _, RemoteData.Failure e ) ->
-            header [] [ div [ class "center" ] [ h2 [ class "error" ] [ text "Internal Failure Loading Video" ] ] ]
+            header [] [ div [ class "center" ] [ h2 [ class "error" ] [ text "Failure Loading Video" ] ] ]
 
         ( _, RemoteData.NotAsked ) ->
             header []
