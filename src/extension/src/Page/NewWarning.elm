@@ -14,10 +14,10 @@ import Html.Attributes
         )
 import Html.Events exposing (onInput, onSubmit)
 import Http
-import Json.Encode as Encode
 import RemoteData exposing (WebData)
 import Time exposing (Time)
 import Warning exposing (Warning)
+import Json.Encode as Encode
 
 
 type alias Model =

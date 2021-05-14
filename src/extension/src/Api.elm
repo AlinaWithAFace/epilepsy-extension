@@ -1,9 +1,7 @@
 module Api exposing (url, Path)
 
-import Dict exposing (Dict)
 import Url exposing (Url)
 import Url.Builder exposing (QueryParameter)
-import Warning exposing (Warning)
 
 type alias Path = List String
 
