@@ -7813,7 +7813,7 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
-var $author$project$Main$viewVideo = function (video) {
+var $author$project$Main$viewVideoMenu = function (video) {
 	return A2(
 		$elm$html$Html$header,
 		_List_Nil,
@@ -7917,7 +7917,7 @@ var $author$project$Main$view = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								$author$project$Main$viewVideo(video)
+								$author$project$Main$viewVideoMenu(video)
 							]));
 				case 1:
 					var pageModel = _v0.a.a;
@@ -7927,7 +7927,7 @@ var $author$project$Main$view = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								$author$project$Main$viewVideo(video),
+								$author$project$Main$viewVideoMenu(video),
 								A2(
 								$elm$html$Html$map,
 								$author$project$Main$ListPageMsg,
@@ -7941,7 +7941,7 @@ var $author$project$Main$view = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								$author$project$Main$viewVideo(video),
+								$author$project$Main$viewVideoMenu(video),
 								A2(
 								$elm$html$Html$map,
 								$author$project$Main$NewPageMsg,

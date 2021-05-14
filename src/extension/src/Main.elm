@@ -80,23 +80,23 @@ view model =
 
         ( EmptyPage, RemoteData.Success video ) ->
             div []
-                [ viewVideo video ]
+                [ viewVideoMenu video ]
 
         ( ListPage pageModel, RemoteData.Success video ) ->
             div []
-                [ viewVideo video
+                [ viewVideoMenu video
                 , Html.map ListPageMsg (ListWarnings.view pageModel)
                 ]
 
         ( NewPage pageModel, RemoteData.Success video ) ->
             div []
-                [ viewVideo video
+                [ viewVideoMenu video
                 , Html.map NewPageMsg (NewWarning.view pageModel)
                 ]
 
 
-viewVideo : Video -> Html Msg
-viewVideo video =
+viewVideoMenu : Video -> Html Msg
+viewVideoMenu video =
     header []
         [ menu []
             [ button

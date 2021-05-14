@@ -14,10 +14,10 @@ import Html.Attributes
         )
 import Html.Events exposing (onInput, onSubmit)
 import Http
+import Json.Encode as Encode
 import RemoteData exposing (WebData)
 import Time exposing (Time)
 import Warning exposing (Warning)
-import Json.Encode as Encode
 
 
 type alias Model =
@@ -28,82 +28,6 @@ type alias Model =
     , error : Maybe String
     , response : WebData ()
     }
-
-
-init : Path -> ( Model, Cmd Msg )
-init path =
-    ( { path = path
-      , start = ""
-      , stop = ""
-      , description = ""
-      , error = Nothing
-      , response = RemoteData.NotAsked
-      }
-    , Cmd.none
-    )
-
-
-type Msg
-    = CreatedWarning (WebData ())
-    | SubmitWarning
-    | InputStart String
-    | InputStop String
-    | InputDescription String
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case ( msg, model.response ) of
-        ( CreatedWarning (RemoteData.Failure (Http.BadStatus 400)), _ ) ->
-            ( { model | response = RemoteData.NotAsked, error = Just "Start time must be earlier than stop time" }, Cmd.none )
-
-        ( CreatedWarning w, _ ) ->
-            ( { model | response = w }, Cmd.none )
-
-        ( SubmitWarning, RemoteData.NotAsked ) ->
-            case ( Time.fromString model.start, Time.fromString model.stop ) of
-                ( Just start, Just stop ) ->
-                    ( { model | response = RemoteData.Loading }
-                    , createWarning
-                        model.path
-                        { start = start
-                        , stop = stop
-                        , description = model.description
-                        }
-                    )
-
-                ( Nothing, Nothing ) ->
-                    ( { model | error = Just "Failed to parse start/stop times" }
-                    , Cmd.none
-                    )
-
-                ( Nothing, _ ) ->
-                    ( { model | error = Just "Failed to parse start time" }
-                    , Cmd.none
-                    )
-
-                ( _, Nothing ) ->
-                    ( { model | error = Just "Failed to parse stop time" }
-                    , Cmd.none
-                    )
-
-        ( InputStart s, RemoteData.NotAsked ) ->
-            ( { model | start = s }, Cmd.none )
-
-        ( InputStop s, RemoteData.NotAsked ) ->
-            ( { model | stop = s }, Cmd.none )
-
-        ( InputDescription s, RemoteData.NotAsked ) ->
-            ( { model | description = s }, Cmd.none )
-
-        _ ->
-            ( model, Cmd.none )
-
-
-stringFromMaybeInt : Maybe Int -> String
-stringFromMaybeInt num =
-    Maybe.withDefault "" <|
-        Maybe.map String.fromInt num
 
 
 view : Model -> Html Msg
@@ -168,6 +92,81 @@ viewError : Maybe String -> Html Msg
 viewError err =
     Maybe.withDefault (div [] []) <|
         Maybe.map Error.view err
+
+
+init : Path -> ( Model, Cmd Msg )
+init path =
+    ( { path = path
+      , start = ""
+      , stop = ""
+      , description = ""
+      , error = Nothing
+      , response = RemoteData.NotAsked
+      }
+    , Cmd.none
+    )
+
+
+type Msg
+    = CreatedWarning (WebData ())
+    | SubmitWarning
+    | InputStart String
+    | InputStop String
+    | InputDescription String
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case ( msg, model.response ) of
+        ( CreatedWarning (RemoteData.Failure (Http.BadStatus 400)), _ ) ->
+            ( { model
+                | response = RemoteData.NotAsked
+                , error = Just "Start time must be earlier than stop time"
+              }
+            , Cmd.none
+            )
+
+        ( CreatedWarning w, _ ) ->
+            ( { model | response = w }, Cmd.none )
+
+        ( SubmitWarning, RemoteData.NotAsked ) ->
+            case ( Time.fromString model.start, Time.fromString model.stop ) of
+                ( Just start, Just stop ) ->
+                    ( { model | response = RemoteData.Loading }
+                    , createWarning
+                        model.path
+                        { start = start
+                        , stop = stop
+                        , description = model.description
+                        }
+                    )
+
+                ( Nothing, Nothing ) ->
+                    ( { model | error = Just "Failed to parse start/stop times" }
+                    , Cmd.none
+                    )
+
+                ( Nothing, _ ) ->
+                    ( { model | error = Just "Failed to parse start time" }
+                    , Cmd.none
+                    )
+
+                ( _, Nothing ) ->
+                    ( { model | error = Just "Failed to parse stop time" }
+                    , Cmd.none
+                    )
+
+        ( InputStart s, RemoteData.NotAsked ) ->
+            ( { model | start = s }, Cmd.none )
+
+        ( InputStop s, RemoteData.NotAsked ) ->
+            ( { model | stop = s }, Cmd.none )
+
+        ( InputDescription s, RemoteData.NotAsked ) ->
+            ( { model | description = s }, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 createWarning : Path -> Warning -> Cmd Msg

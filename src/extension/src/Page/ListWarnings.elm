@@ -15,21 +15,6 @@ type alias Model =
     { warnings : WebData (List Warning)
     }
 
-
-init : Path -> ( Model, Cmd Msg )
-init path =
-    ( { warnings = RemoteData.Loading }, getAllWarnings path )
-
-
-type alias Msg =
-    WebData (List Warning)
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    ( { model | warnings = msg }, Cmd.none )
-
-
 view : Model -> Html Msg
 view model =
     case model.warnings of
@@ -74,6 +59,22 @@ viewWarning warning =
                 ]
             ]
         ]
+
+
+init : Path -> ( Model, Cmd Msg )
+init path =
+    ( { warnings = RemoteData.Loading }, getAllWarnings path )
+
+
+type alias Msg =
+    WebData (List Warning)
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    ( { model | warnings = msg }, Cmd.none )
+
+
 
 
 getAllWarnings : Path -> Cmd Msg
