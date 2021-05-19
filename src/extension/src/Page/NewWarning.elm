@@ -1,6 +1,7 @@
 module Page.NewWarning exposing (Model, Msg(..), init, update, view)
 
 import Api exposing (Path, url)
+import Error
 import Html exposing (Html, div, form, h2, input, label, text, textarea)
 import Html.Attributes
     exposing
@@ -17,7 +18,6 @@ import Json.Encode as Encode
 import RemoteData exposing (WebData)
 import Time exposing (Time)
 import Warning exposing (Warning)
-import Error
 
 
 type alias Model =
@@ -28,6 +28,70 @@ type alias Model =
     , error : Maybe String
     , response : WebData ()
     }
+
+
+view : Model -> Html Msg
+view model =
+    case model.response of
+        RemoteData.Loading ->
+            text ""
+
+        RemoteData.NotAsked ->
+            viewForm model
+
+        RemoteData.Failure e ->
+            div [ class "center" ]
+                [ Error.view (Error.toString e) ]
+
+        RemoteData.Success _ ->
+            div [ class "center" ]
+                [ h2 [ class "success" ]
+                    [ text "Warning successfully submitted" ]
+                ]
+
+
+viewForm : Model -> Html Msg
+viewForm model =
+    div [ class "center", id "warning-form-container" ]
+        [ form [ class "warning-form", onSubmit SubmitWarning ]
+            [ viewError model.error
+            , label [] [ text "Start Time" ]
+            , timeInput
+                model.start
+                InputStart
+            , label [] [ text "Stop Time" ]
+            , timeInput
+                model.stop
+                InputStop
+            , label [] [ text "Description" ]
+            , textarea
+                [ value model.description
+                , onInput InputDescription
+                , placeholder
+                    "Description of why the video segment might be dangerous"
+                ]
+                []
+            , input [ class "submit", type_ "submit" ] [ text "Submit" ]
+            ]
+        ]
+
+
+timeInput : String -> (String -> msg) -> Html msg
+timeInput v toMsg =
+    input
+        [ pattern "[0-9]*:[0-5][0-9]"
+        , placeholder "mm:ss"
+        , type_ "text"
+        , value v
+        , onInput toMsg
+        ]
+        []
+
+
+viewError : Maybe String -> Html Msg
+viewError err =
+    Maybe.withDefault (div [] []) <|
+        Maybe.map Error.view err
 
 
 init : Path -> ( Model, Cmd Msg )
@@ -55,7 +119,12 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model.response ) of
         ( CreatedWarning (RemoteData.Failure (Http.BadStatus 400)), _ ) ->
-            ( { model | response = RemoteData.NotAsked, error = Just "Start time must be earlier than stop time" }, Cmd.none )
+            ( { model
+                | response = RemoteData.NotAsked
+                , error = Just "Start time must be earlier than stop time"
+              }
+            , Cmd.none
+            )
 
         ( CreatedWarning w, _ ) ->
             ( { model | response = w }, Cmd.none )
@@ -98,81 +167,6 @@ update msg model =
 
         _ ->
             ( model, Cmd.none )
-
-
-stringFromMaybeInt : Maybe Int -> String
-stringFromMaybeInt num =
-    case num of
-        Just n ->
-            String.fromInt n
-
-        Nothing ->
-            ""
-
-
-view : Model -> Html Msg
-view model =
-    case model.response of
-        RemoteData.Loading ->
-            text ""
-
-        RemoteData.NotAsked ->
-            viewForm model
-
-        RemoteData.Failure e ->
-            div [ class "center" ]
-                [ h2 [ class "error" ] [ text (Error.toString e) ] ]
-
-        RemoteData.Success _ ->
-            div [ class "center" ]
-                [ h2 [ class "success" ] [ text "Warning successfully submitted" ] ]
-
-
-viewForm : Model -> Html Msg
-viewForm model =
-    div [ class "center", id "warning-form-container" ]
-        [ form [ class "warning-form", onSubmit SubmitWarning ]
-            [ viewError model.error
-            , label [] [ text "Start Time" ]
-            , timeInput
-                model.start
-                InputStart
-            , label [] [ text "Stop Time" ]
-            , timeInput
-                model.stop
-                InputStop
-            , label [] [ text "Description" ]
-            , textarea
-                [ value model.description
-                , onInput InputDescription
-                , placeholder "Description of the potential photosensitivity trigger"
-                ]
-                []
-            , input [ class "submit", type_ "submit" ] [ text "Submit" ]
-            ]
-        ]
-
-
-timeInput : String -> (String -> msg) -> Html msg
-timeInput v toMsg =
-    input
-        [ pattern "[0-9]*:[0-5][0-9]"
-        , placeholder "mm:ss"
-        , type_ "text"
-        , value v
-        , onInput toMsg
-        ]
-        []
-
-
-viewError : Maybe String -> Html Msg
-viewError err =
-    case err of
-        Just e ->
-            h2 [ class "error" ] [ text e ]
-
-        Nothing ->
-            div [] []
 
 
 createWarning : Path -> Warning -> Cmd Msg
