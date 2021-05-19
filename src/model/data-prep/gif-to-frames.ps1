@@ -7,5 +7,7 @@
 foreach($gifFile in ls *.gif) {
     $dirName=[io.path]::GetFileNameWithoutExtension($gifFile)
     mkdir $dirName
-    ffmpeg -i $gifFile "$dirName/%04d.jpg"
+#     ffmpeg -i $gifFile "$dirName/%04d.jpg"
+    ffmpeg -i $gifFile "$dirName/image_%04d.jpg"
+
 }
