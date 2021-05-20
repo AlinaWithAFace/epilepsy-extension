@@ -1,10 +1,16 @@
-module Api exposing (url, Path)
+module Api exposing (Path, url)
 
 import Url exposing (Url)
 import Url.Builder exposing (QueryParameter)
 
-type alias Path = List String
+
+type alias Path =
+    List String
+
 
 url : Path -> List QueryParameter -> String
 url path queryParams =
-    Url.Builder.crossOrigin "http://localhost:5000" ("api" :: path) queryParams
+    Url.Builder.crossOrigin
+        "http://107.23.130.40:8080"
+        ("api" :: path)
+        queryParams
