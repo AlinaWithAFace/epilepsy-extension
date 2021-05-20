@@ -87,7 +87,7 @@ h2 {
   margin-left: auto;
   margin-right: auto;
   overflow: auto;
-  height: 21rem;
+  height: 17.5rem;
   border: 1px solid #e0e0e0;
   width: 30rem;
 }
@@ -167,17 +167,55 @@ th {
   font-family: 'Inter', sans-serif;
   font-size: 0.9rem;
   border: 1px solid #6FA7B8;
+  background-color: white;
+  color: #568795;
+  border: 1px solid #568795;
 }
 
 .warning-form .submit:hover {
   cursor: pointer;
+  background-color: #649AAA;
+  color: white;
 }
 .warning-form .submit:active {
   cursor: pointer;
+  background-color: #568795;
+  color: white;
 }
 
 .warning-form .error {
   margin:0.25rem;
   margin-bottom:1rem;
   width:19rem;
+}
+
+.warning-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.warning-menu {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.warning-menu button {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  border: 1px solid #568795;
+  background-color: white;
+  color: #568795;
+}
+
+.warning-menu button:hover {
+  cursor: pointer;
+  background-color: #649AAA;
+  color: white;
+}
+.warning-menu button:active {
+  cursor: pointer;
+  background-color: #568795;
+  color: white;
 }
