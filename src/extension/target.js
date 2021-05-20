@@ -6734,6 +6734,14 @@ var $author$project$Main$createVideo = function (id) {
 				_List_Nil)
 		});
 };
+var $author$project$Page$ListWarnings$GotWarnings = function (a) {
+	return {$: 3, a: a};
+};
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
 var $author$project$Warning$Warning = F3(
 	function (start, stop, description) {
 		return {aV: description, bb: start, be: stop};
@@ -6760,23 +6768,38 @@ var $author$project$Page$ListWarnings$decodeWarning = A4(
 	A2($elm$json$Json$Decode$field, 'warning_description', $elm$json$Json$Decode$string));
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $author$project$Page$ListWarnings$decodeWarnings = $elm$json$Json$Decode$list($author$project$Page$ListWarnings$decodeWarning);
-var $author$project$Page$ListWarnings$getAllWarnings = function (path) {
-	return $elm$http$Http$get(
-		{
-			aa: A2($elm$http$Http$expectJson, $krisajenkins$remotedata$RemoteData$fromResult, $author$project$Page$ListWarnings$decodeWarnings),
-			aK: A2(
-				$author$project$Api$url,
-				_Utils_ap(
-					path,
-					_List_fromArray(
-						['warnings'])),
-				_List_Nil)
-		});
-};
+var $author$project$Page$ListWarnings$getWarnings = F2(
+	function (path, query) {
+		var queryParams = function () {
+			if (query.$ === 1) {
+				return _List_Nil;
+			} else {
+				var q = query.a;
+				return _List_fromArray(
+					[
+						A2($elm$url$Url$Builder$string, 'source', q)
+					]);
+			}
+		}();
+		return $elm$http$Http$get(
+			{
+				aa: A2(
+					$elm$http$Http$expectJson,
+					A2($elm$core$Basics$composeL, $author$project$Page$ListWarnings$GotWarnings, $krisajenkins$remotedata$RemoteData$fromResult),
+					$author$project$Page$ListWarnings$decodeWarnings),
+				aK: A2(
+					$author$project$Api$url,
+					_Utils_ap(
+						path,
+						_List_fromArray(
+							['warnings'])),
+					queryParams)
+			});
+	});
 var $author$project$Page$ListWarnings$init = function (path) {
 	return _Utils_Tuple2(
-		{O: $krisajenkins$remotedata$RemoteData$Loading},
-		$author$project$Page$ListWarnings$getAllWarnings(path));
+		{ao: path, O: $krisajenkins$remotedata$RemoteData$Loading},
+		A2($author$project$Page$ListWarnings$getWarnings, path, $elm$core$Maybe$Nothing));
 };
 var $author$project$Page$NewWarning$init = function (path) {
 	return _Utils_Tuple2(
@@ -6786,11 +6809,33 @@ var $author$project$Page$NewWarning$init = function (path) {
 var $elm$core$Platform$Cmd$map = _Platform_map;
 var $author$project$Page$ListWarnings$update = F2(
 	function (msg, model) {
-		return _Utils_Tuple2(
-			_Utils_update(
-				model,
-				{O: msg}),
-			$elm$core$Platform$Cmd$none);
+		switch (msg.$) {
+			case 3:
+				var warnings = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{O: warnings}),
+					$elm$core$Platform$Cmd$none);
+			case 0:
+				return _Utils_Tuple2(
+					model,
+					A2($author$project$Page$ListWarnings$getWarnings, model.ao, $elm$core$Maybe$Nothing));
+			case 2:
+				return _Utils_Tuple2(
+					model,
+					A2(
+						$author$project$Page$ListWarnings$getWarnings,
+						model.ao,
+						$elm$core$Maybe$Just('AUTO')));
+			default:
+				return _Utils_Tuple2(
+					model,
+					A2(
+						$author$project$Page$ListWarnings$getWarnings,
+						model.ao,
+						$elm$core$Maybe$Just('USER')));
+		}
 	});
 var $author$project$Page$NewWarning$CreatedWarning = function (a) {
 	return {$: 0, a: a};
@@ -7440,6 +7485,27 @@ var $author$project$Error$view = function (e) {
 				$elm$html$Html$text(e)
 			]));
 };
+var $author$project$Page$ListWarnings$ClickAll = {$: 0};
+var $author$project$Page$ListWarnings$ClickAuto = {$: 2};
+var $author$project$Page$ListWarnings$ClickUser = {$: 1};
+var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$core$List$isEmpty = function (xs) {
 	if (!xs.b) {
@@ -7545,7 +7611,7 @@ var $author$project$Page$ListWarnings$viewWarnings = function (warnings) {
 			]),
 		_List_fromArray(
 			[
-				$author$project$Error$view('No user warnings have been created for this video')
+				$author$project$Error$view('No warnings found')
 			])) : A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -7563,7 +7629,55 @@ var $author$project$Page$ListWarnings$view = function (model) {
 			return $elm$html$Html$text('');
 		case 3:
 			var warnings = _v0.a;
-			return $author$project$Page$ListWarnings$viewWarnings(warnings);
+			return A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('warning-body')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('warning-menu')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Page$ListWarnings$ClickAll)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('All Warnings')
+									])),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Page$ListWarnings$ClickAuto)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Automated Warnings')
+									])),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Page$ListWarnings$ClickUser)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('User Created Warnings')
+									]))
+							])),
+						$author$project$Page$ListWarnings$viewWarnings(warnings)
+					]));
 		default:
 			var e = _v0.a;
 			return A2(
@@ -7598,7 +7712,6 @@ var $elm$html$Html$Events$alwaysStop = function (x) {
 var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
 	return {$: 1, a: a};
 };
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
 var $elm$html$Html$Events$stopPropagationOn = F2(
 	function (event, decoder) {
 		return A2(
@@ -7795,24 +7908,7 @@ var $author$project$Main$ClickList = function (a) {
 var $author$project$Main$ClickNew = function (a) {
 	return {$: 6, a: a};
 };
-var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$menu = _VirtualDom_node('menu');
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 0, a: a};
-};
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var $elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
-};
 var $author$project$Main$viewVideoMenu = function (video) {
 	return A2(
 		$elm$html$Html$header,
