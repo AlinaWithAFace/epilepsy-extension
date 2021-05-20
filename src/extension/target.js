@@ -6340,7 +6340,7 @@ var $author$project$Api$url = F2(
 	function (path, queryParams) {
 		return A3(
 			$elm$url$Url$Builder$crossOrigin,
-			'http://localhost:5000',
+			'http://107.23.130.40:8080',
 			A2($elm$core$List$cons, 'api', path),
 			queryParams);
 	});
