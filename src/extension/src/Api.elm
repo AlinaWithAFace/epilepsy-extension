@@ -11,6 +11,6 @@ type alias Path =
 url : Path -> List QueryParameter -> String
 url path queryParams =
     Url.Builder.crossOrigin
-        "http://107.23.130.40:8080"
-        ("api" :: path)
+        "http://cisc4667.cis.udel.edu"
+        ("episense" :: "api" :: path)
         queryParams
