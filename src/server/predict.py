@@ -29,17 +29,6 @@ state_dict = torch.load(
 model.load_state_dict(state_dict)
 
 
-def get_frames(video_iter, n_frames=1):
-    frames = []
-    v_len = n_frames
-    frame_list = np.linspace(0, v_len - 1, n_frames + 1, dtype=np.int16)
-    for fn in range(v_len):
-        frame = next(video_iter)
-        img = frame.to_image()
-        frames.append(np.asarray(img))
-    return frames
-
-
 def get_normalize_method(mean, std, no_mean_norm, no_std_norm):
     if no_mean_norm:
         if no_std_norm:
@@ -79,16 +68,19 @@ def preprocessing(clip, spatial_transform):
 
 def get_all_predictions(fname, step_size=128):
     video = av.open(fname).streams.video[0]
-    fps = video.guessed_rate
-    nframes = video.frames
     video_iter = (frame for packet in video.container.demux()
                   for frame in packet.decode())
+    fps = video.guessed_rate
+    frames = np.array(list(np.asarray(frame.to_image()) for frame in video_iter))
+    nframes = len(frames)
     cur_frame = 0
     predictions = []
     while cur_frame < nframes:
         step = min(step_size, nframes - cur_frame)
-        frames = get_frames(video_iter, step)[0]
-        if predict(frames):
+        fs = frames[cur_frame:cur_frame+step]
+        prob, is_dangerous = predict(fs)
+        print(prob, is_dangerous)
+        if is_dangerous:
             predictions.append(
                 (int(cur_frame / fps), int((cur_frame + step) / fps)))
         cur_frame += step
