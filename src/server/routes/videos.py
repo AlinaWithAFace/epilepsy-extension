@@ -16,7 +16,7 @@ def get_video_by_id(video_id):
 
     cursor = database.execute(
         """
-        SELECT video_id, video_vid, video_title FROM Videos
+        SELECT video_id, video_vid, video_title, video_screening_status FROM Videos
         WHERE video_id = ?
         """,
         video_id,
@@ -43,7 +43,7 @@ def get_videos():
     if 'vid' in data:
         cursor = database.execute(
             """
-            SELECT video_id, video_vid, video_title FROM Videos
+            SELECT video_id, video_vid, video_title, video_screening_status FROM Videos
             WHERE video_vid = ?
             """,
             data['vid'],
@@ -51,7 +51,7 @@ def get_videos():
     else:
         cursor = database.execute(
             """
-            SELECT video_id, video_vid, video_title FROM Videos
+            SELECT video_id, video_vid, video_title, video_screening_status FROM Videos
             """
         )
 
@@ -81,13 +81,15 @@ def create_video():
 
         cursor = database.execute(
             """
-            INSERT INTO Videos (video_vid, video_title)
-            VALUES (?, ?);
+            INSERT INTO Videos (video_vid, video_title, video_duration)
+            VALUES (?, ?, ?);
             """,
             video.videoid,
             video.title,
+            video.length,
             commit=True,
         )
+
         new_id = cursor.lastrowid
 
         return Response(
