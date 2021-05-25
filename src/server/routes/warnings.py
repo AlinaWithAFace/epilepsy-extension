@@ -6,7 +6,7 @@ import json
 from flask import Blueprint, Response, request
 from sqlite3 import IntegrityError
 import pafy
-from predict import get_all_predictions
+# from predict import get_all_predictions
 
 
 blueprint = Blueprint("warnings", __name__)
@@ -129,61 +129,61 @@ def create_warning(video_id):
         return Response(status=http.HTTPStatus.BAD_REQUEST)
 
 
-@blueprint.route("/<video_id>/warnings/generate", methods=["POST"])
-def generate_warnings(video_id):
-    """Generate warnings for video"""
-    video_id
-
-    cursor = database.execute(
-        """
-        SELECT video_vid, video_screening_status FROM Videos
-        WHERE video_id = ?
-        """,
-        video_id
-    )
-    row = cursor.fetchone()
-    vid = row['video_vid']
-
-    
-    if row['video_screening_status'] == "NOT STARTED":
-
-        database.execute(
-            """
-            UPDATE Videos
-            SET video_screening_status = "STARTED"
-            WHERE video_id = ?
-            """,
-            video_id,
-            commit=True,
-        )
-
-        video = pafy.new(vid)
-
-        predictions = get_all_predictions(video.getbestvideo(preftype="mp4").url)
-
-        for (start, stop) in predictions:
-            cursor = database.execute(
-                """
-                INSERT INTO Warnings (warning_video_id, warning_start, warning_end,
-                warning_description, warning_source)
-                VALUES (?, ?, ?, "Automated Warning", "AUTO")
-                """,
-                video_id,
-                start,
-                stop,
-                commit=True,
-            )
-
-        database.execute(
-            """
-            UPDATE Videos
-            SET video_screening_status = "COMPLETED"
-            WHERE video_id = ?
-            """,
-            video_id,
-            commit=True,
-        )
-        return Response(status=http.HTTPStatus.CREATED)
-    else:
-        return Response(status=http.HTTPStatus.BAD_REQUEST)
-
+# @blueprint.route("/<video_id>/warnings/generate", methods=["POST"])
+# def generate_warnings(video_id):
+#     """Generate warnings for video"""
+#     video_id
+# 
+#     cursor = database.execute(
+#         """
+#         SELECT video_vid, video_screening_status FROM Videos
+#         WHERE video_id = ?
+#         """,
+#         video_id
+#     )
+#     row = cursor.fetchone()
+#     vid = row['video_vid']
+# 
+#     
+#     if row['video_screening_status'] == "NOT STARTED":
+# 
+#         database.execute(
+#             """
+#             UPDATE Videos
+#             SET video_screening_status = "STARTED"
+#             WHERE video_id = ?
+#             """,
+#             video_id,
+#             commit=True,
+#         )
+# 
+#         video = pafy.new(vid)
+# 
+#         predictions = get_all_predictions(video.getbestvideo(preftype="mp4").url)
+# 
+#         for (start, stop) in predictions:
+#             cursor = database.execute(
+#                 """
+#                 INSERT INTO Warnings (warning_video_id, warning_start, warning_end,
+#                 warning_description, warning_source)
+#                 VALUES (?, ?, ?, "Automated Warning", "AUTO")
+#                 """,
+#                 video_id,
+#                 start,
+#                 stop,
+#                 commit=True,
+#             )
+# 
+#         database.execute(
+#             """
+#             UPDATE Videos
+#             SET video_screening_status = "COMPLETED"
+#             WHERE video_id = ?
+#             """,
+#             video_id,
+#             commit=True,
+#         )
+#         return Response(status=http.HTTPStatus.CREATED)
+#     else:
+#         return Response(status=http.HTTPStatus.BAD_REQUEST)
+# 
