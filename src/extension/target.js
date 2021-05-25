@@ -6340,8 +6340,11 @@ var $author$project$Api$url = F2(
 	function (path, queryParams) {
 		return A3(
 			$elm$url$Url$Builder$crossOrigin,
-			'http://localhost:5000',
-			A2($elm$core$List$cons, 'api', path),
+			'http://cisc4667.cis.udel.edu',
+			A2(
+				$elm$core$List$cons,
+				'episense',
+				A2($elm$core$List$cons, 'api', path)),
 			queryParams);
 	});
 var $author$project$Main$getVideo = function (id) {
