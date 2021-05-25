@@ -7220,7 +7220,7 @@ var $author$project$Page$NewWarning$update = F2(
 							_Utils_update(
 								model,
 								{
-									x: $elm$core$Maybe$Just('Start time must be earlier than stop time'),
+									x: $elm$core$Maybe$Just('Invalid start and/or end time(s)'),
 									B: $krisajenkins$remotedata$RemoteData$NotAsked
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -7257,7 +7257,7 @@ var $author$project$Page$NewWarning$update = F2(
 									_Utils_update(
 										model,
 										{
-											x: $elm$core$Maybe$Just('Failed to parse stop time')
+											x: $elm$core$Maybe$Just('Missing stop time')
 										}),
 									$elm$core$Platform$Cmd$none);
 							}
@@ -7269,7 +7269,7 @@ var $author$project$Page$NewWarning$update = F2(
 									_Utils_update(
 										model,
 										{
-											x: $elm$core$Maybe$Just('Failed to parse start/stop times')
+											x: $elm$core$Maybe$Just('Missing start and stop times')
 										}),
 									$elm$core$Platform$Cmd$none);
 							} else {
@@ -7278,7 +7278,7 @@ var $author$project$Page$NewWarning$update = F2(
 									_Utils_update(
 										model,
 										{
-											x: $elm$core$Maybe$Just('Failed to parse start time')
+											x: $elm$core$Maybe$Just('Missing start time')
 										}),
 									$elm$core$Platform$Cmd$none);
 							}
