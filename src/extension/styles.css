@@ -89,17 +89,28 @@ h2 {
   color: white;
 }
 
+.warning-body .error {
+  margin-bottom: 1.5rem;
+}
+
 #warnings {
   text-align: left;
   border-collapse: collapse;
   margin-left: auto;
   margin-right: auto;
   overflow: auto;
-  height: 17.5rem;
+  background-color: white;
+  min-height: 12.5rem;
+  max-height: 17.5rem;
   border: 1px solid #e0e0e0;
   width: 30rem;
 }
 
+#warnings .no-warnings {
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
 .warning:nth-of-type(odd) {
   background-color: white;
 }

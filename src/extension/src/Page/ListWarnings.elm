@@ -20,6 +20,7 @@ type alias Warnings =
 type alias Model =
     { warnings : WebData Warnings
     , path : Path
+    , screeningStatus : WebData ()
     }
 
 
@@ -27,21 +28,24 @@ view : Model -> Html Msg
 view model =
     case model.warnings of
         RemoteData.NotAsked ->
-            text ""
+            div [ class "warning-body" ]
+                [ viewMenu ]
 
         RemoteData.Loading ->
             div [ class "warning-body" ]
                 [ viewMenu
                 , div [ class "center" ]
-                    [ h2 [ class "loading" ] [ text "Loading..." ]
+                    [ h2 [ class "loading" ] [ text "loading..." ]
                     ]
                 ]
 
         RemoteData.Success warnings ->
             div [ class "warning-body" ]
-                [ viewMenu
-                , viewWarnings warnings
-                ]
+                ([ viewMenu ]
+                    ++ viewStatus model.screeningStatus
+                    ++ [ viewWarnings warnings
+                       ]
+                )
 
         RemoteData.Failure e ->
             div [ class "warning-body" ]
@@ -65,10 +69,22 @@ viewMenu =
         ]
 
 
+viewStatus : WebData () -> List (Html Msg)
+viewStatus status =
+    case status of
+        RemoteData.Success _ ->
+            []
+
+        _ ->
+            [ div [ class "center" ] [ Error.view "Video is still being screened" ] ]
+
+
 viewWarnings : Warnings -> Html Msg
 viewWarnings warnings =
     if List.isEmpty warnings then
-        div [ class "center" ] [ Error.view "No warnings found" ]
+        div [ id "warnings" ]
+            [ div [ class "no-warnings" ] [ text "No warnings to display" ]
+            ]
 
     else
         div [ id "warnings" ] (List.map viewWarning warnings)
@@ -76,9 +92,22 @@ viewWarnings warnings =
 
 viewWarning : Warning -> Html Msg
 viewWarning warning =
+    let
+        sourceToString s =
+            case s of
+                Warning.Automated ->
+                    "Automated"
+
+                Warning.UserGenerated ->
+                    "User Generated"
+    in
     table [ class "warning" ]
         [ tbody []
             [ tr []
+                [ th [] [ text "Source" ]
+                , td [] [ text (sourceToString warning.source) ]
+                ]
+            , tr []
                 [ th [] [ text "Start" ]
                 , td [] [ text (Time.toString warning.start) ]
                 ]
@@ -96,7 +125,13 @@ viewWarning warning =
 
 init : Path -> ( Model, Cmd Msg )
 init path =
-    ( { warnings = RemoteData.Loading, path = path }, getWarnings path Nothing )
+    ( { warnings = RemoteData.NotAsked
+      , path = path
+      , screeningStatus =
+            RemoteData.Loading
+      }
+    , createAutomatedWarnings path
+    )
 
 
 type Msg
@@ -104,11 +139,15 @@ type Msg
     | ClickUser
     | ClickAuto
     | GotWarnings (WebData Warnings)
+    | CreatedAutomatedWarnings (WebData ())
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        CreatedAutomatedWarnings status ->
+            ( { model | screeningStatus = status }, getWarnings model.path Nothing )
+
         GotWarnings warnings ->
             ( { model | warnings = warnings }, Cmd.none )
 
@@ -120,6 +159,16 @@ update msg model =
 
         ClickUser ->
             ( model, getWarnings model.path (Just "USER") )
+
+
+createAutomatedWarnings : Path -> Cmd Msg
+createAutomatedWarnings path =
+    Http.post
+        { url = url (path ++ [ "warnings", "generate" ]) []
+        , expect =
+            Http.expectWhatever (RemoteData.fromResult >> CreatedAutomatedWarnings)
+        , body = Http.emptyBody
+        }
 
 
 getWarnings : Path -> Maybe String -> Cmd Msg
@@ -144,11 +193,28 @@ getWarnings path query =
 
 decodeWarning : Decoder Warning
 decodeWarning =
-    Decode.map3
+    let
+        stringToSourceDecoder s =
+            case s of
+                "AUTO" ->
+                    Decode.succeed Warning.Automated
+
+                "USER" ->
+                    Decode.succeed Warning.UserGenerated
+
+                _ ->
+                    Decode.fail "Invalid warning source"
+
+        decodeSource =
+            Decode.string
+                |> Decode.andThen stringToSourceDecoder
+    in
+    Decode.map4
         Warning
         (Decode.map Time.fromInt (Decode.field "warning_start" Decode.int))
         (Decode.map Time.fromInt (Decode.field "warning_end" Decode.int))
         (Decode.field "warning_description" Decode.string)
+        (Decode.field "warning_source" decodeSource)
 
 
 decodeWarnings : Decode.Decoder Warnings

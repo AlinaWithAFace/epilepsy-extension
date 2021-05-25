@@ -3,7 +3,7 @@ module Main exposing (main)
 import Api exposing (Path, url)
 import Browser
 import Error
-import Html exposing (Html, button, div, header, menu, text, h2)
+import Html exposing (Html, button, div, h2, header, menu, text)
 import Html.Attributes exposing (class, id)
 import Html.Events exposing (onClick)
 import Http
