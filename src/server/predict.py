@@ -1,7 +1,7 @@
 # from https://github.com/kenshohara/3D-ResNets-PyTorch/issues/221
 
 import torch
-import cv2
+import av
 import numpy as np
 import torch.nn.functional as F
 import resnet
@@ -29,18 +29,15 @@ state_dict = torch.load(
 model.load_state_dict(state_dict)
 
 
-def get_frames(v_cap, n_frames=1):
+def get_frames(video_iter, n_frames=1):
     frames = []
     v_len = n_frames
     frame_list = np.linspace(0, v_len - 1, n_frames + 1, dtype=np.int16)
     for fn in range(v_len):
-        success, frame = v_cap.read()
-        if success is False:
-            continue
-        if fn in frame_list:
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            frames.append(frame)
-    return frames, v_len
+        frame = next(video_iter)
+        img = frame.to_image()
+        frames.append(np.asarray(img))
+    return frames
 
 
 def get_normalize_method(mean, std, no_mean_norm, no_std_norm):
@@ -81,18 +78,20 @@ def preprocessing(clip, spatial_transform):
 
 
 def get_all_predictions(fname, step_size=128):
-    v_cap = cv2.VideoCapture(fname)
-    fps = v_cap.get(cv2.CAP_PROP_FPS)
-    nframes = v_cap.get(cv2.CAP_PROP_FRAME_COUNT)
+    video = av.open(fname).streams.video[0]
+    fps = video.guessed_rate
+    nframes = video.frames
+    video_iter = (frame for packet in video.container.demux()
+                  for frame in packet.decode())
     cur_frame = 0
     predictions = []
     while cur_frame < nframes:
-        cur_frame += step_size
-        frames = get_frames(v_cap, step_size)[0]
+        step = min(step_size, nframes - cur_frame)
+        frames = get_frames(video_iter, step)[0]
         if predict(frames):
             predictions.append(
-                (int((cur_frame - step_size) / fps), int(cur_frame / fps)))
-    v_cap.release()
+                (int(cur_frame / fps), int((cur_frame + step) / fps)))
+        cur_frame += step
     return predictions
 
 
