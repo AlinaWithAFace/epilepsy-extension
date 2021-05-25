@@ -3,15 +3,15 @@ module Main exposing (main)
 import Api exposing (Path, url)
 import Browser
 import Error
-import Http
-import Html exposing (Html, button, div, header, menu, text)
+import Html exposing (Html, button, div, header, menu, text, h2)
 import Html.Attributes exposing (class, id)
 import Html.Events exposing (onClick)
+import Http
+import Json.Decode as Decode
+import Json.Encode as Encode
 import Page.ListWarnings as ListWarnings
 import Page.NewWarning as NewWarning
 import RemoteData exposing (WebData)
-import Json.Decode as Decode
-import Json.Encode as Encode
 import Url exposing (Url)
 import Url.Builder
 import Url.Parser as Parser exposing ((<?>))
@@ -65,7 +65,11 @@ view : Model -> Html Msg
 view model =
     case ( model.page, model.video ) of
         ( _, RemoteData.Loading ) ->
-            header [] [ div [ class "center" ] [ text "" ] ]
+            header []
+                [ div [ class "center" ]
+                    [ h2 [ class "loading" ] [ text "Loading..." ]
+                    ]
+                ]
 
         ( _, RemoteData.Failure e ) ->
             header []

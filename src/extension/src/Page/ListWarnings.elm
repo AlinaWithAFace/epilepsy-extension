@@ -2,7 +2,7 @@ module Page.ListWarnings exposing (Model, Msg, init, update, view)
 
 import Api exposing (Path, url)
 import Error
-import Html exposing (Html, button, div, table, tbody, td, text, th, tr)
+import Html exposing (Html, button, div, h2, table, tbody, td, text, th, tr)
 import Html.Attributes exposing (class, id)
 import Html.Events exposing (onClick)
 import Http
@@ -30,26 +30,39 @@ view model =
             text ""
 
         RemoteData.Loading ->
-            text ""
+            div [ class "warning-body" ]
+                [ viewMenu
+                , div [ class "center" ]
+                    [ h2 [ class "loading" ] [ text "Loading..." ]
+                    ]
+                ]
 
         RemoteData.Success warnings ->
             div [ class "warning-body" ]
-                [ div [ class "warning-menu" ]
-                    [ button
-                        [ onClick ClickAll ]
-                        [ text "All Warnings" ]
-                    , button
-                        [ onClick ClickAuto ]
-                        [ text "Automated Warnings" ]
-                    , button
-                        [ onClick ClickUser ]
-                        [ text "User Created Warnings" ]
-                    ]
+                [ viewMenu
                 , viewWarnings warnings
                 ]
 
         RemoteData.Failure e ->
-            div [ class "center" ] [ Error.view (Error.toString e) ]
+            div [ class "warning-body" ]
+                [ viewMenu
+                , div [ class "center" ] [ Error.view (Error.toString e) ]
+                ]
+
+
+viewMenu : Html Msg
+viewMenu =
+    div [ class "warning-menu" ]
+        [ button
+            [ onClick ClickAll ]
+            [ text "All Warnings" ]
+        , button
+            [ onClick ClickAuto ]
+            [ text "Automated Warnings" ]
+        , button
+            [ onClick ClickUser ]
+            [ text "User Created Warnings" ]
+        ]
 
 
 viewWarnings : Warnings -> Html Msg

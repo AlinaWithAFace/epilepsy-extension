@@ -34,7 +34,9 @@ view : Model -> Html Msg
 view model =
     case model.response of
         RemoteData.Loading ->
-            text ""
+            div [ class "center" ]
+                [ h2 [ class "loading" ] [ text "Loading..." ]
+                ]
 
         RemoteData.NotAsked ->
             viewForm model
@@ -121,7 +123,7 @@ update msg model =
         ( CreatedWarning (RemoteData.Failure (Http.BadStatus 400)), _ ) ->
             ( { model
                 | response = RemoteData.NotAsked
-                , error = Just "Start time must be earlier than stop time"
+                , error = Just "Invalid start and/or end time(s)"
               }
             , Cmd.none
             )
@@ -142,17 +144,17 @@ update msg model =
                     )
 
                 ( Nothing, Nothing ) ->
-                    ( { model | error = Just "Failed to parse start/stop times" }
+                    ( { model | error = Just "Missing start and stop times" }
                     , Cmd.none
                     )
 
                 ( Nothing, _ ) ->
-                    ( { model | error = Just "Failed to parse start time" }
+                    ( { model | error = Just "Missing start time" }
                     , Cmd.none
                     )
 
                 ( _, Nothing ) ->
-                    ( { model | error = Just "Failed to parse stop time" }
+                    ( { model | error = Just "Missing stop time" }
                     , Cmd.none
                     )
 
