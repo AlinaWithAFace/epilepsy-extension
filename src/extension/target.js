@@ -7452,6 +7452,7 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $elm$html$Html$header = _VirtualDom_node('header');
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
@@ -7475,7 +7476,6 @@ var $author$project$Error$toString = function (err) {
 		}
 	}();
 };
-var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $author$project$Error$view = function (e) {
 	return A2(
 		$elm$html$Html$h2,
@@ -7509,6 +7509,45 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $author$project$Page$ListWarnings$viewMenu = A2(
+	$elm$html$Html$div,
+	_List_fromArray(
+		[
+			$elm$html$Html$Attributes$class('warning-menu')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$button,
+			_List_fromArray(
+				[
+					$elm$html$Html$Events$onClick($author$project$Page$ListWarnings$ClickAll)
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('All Warnings')
+				])),
+			A2(
+			$elm$html$Html$button,
+			_List_fromArray(
+				[
+					$elm$html$Html$Events$onClick($author$project$Page$ListWarnings$ClickAuto)
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Automated Warnings')
+				])),
+			A2(
+			$elm$html$Html$button,
+			_List_fromArray(
+				[
+					$elm$html$Html$Events$onClick($author$project$Page$ListWarnings$ClickUser)
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('User Created Warnings')
+				]))
+		]));
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$core$List$isEmpty = function (xs) {
 	if (!xs.b) {
@@ -7629,7 +7668,35 @@ var $author$project$Page$ListWarnings$view = function (model) {
 		case 0:
 			return $elm$html$Html$text('');
 		case 1:
-			return $elm$html$Html$text('');
+			return A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('warning-body')
+					]),
+				_List_fromArray(
+					[
+						$author$project$Page$ListWarnings$viewMenu,
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('center')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h2,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('loading')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Loading...')
+									]))
+							]))
+					]));
 		case 3:
 			var warnings = _v0.a;
 			return A2(
@@ -7640,45 +7707,7 @@ var $author$project$Page$ListWarnings$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('warning-menu')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$button,
-								_List_fromArray(
-									[
-										$elm$html$Html$Events$onClick($author$project$Page$ListWarnings$ClickAll)
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('All Warnings')
-									])),
-								A2(
-								$elm$html$Html$button,
-								_List_fromArray(
-									[
-										$elm$html$Html$Events$onClick($author$project$Page$ListWarnings$ClickAuto)
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Automated Warnings')
-									])),
-								A2(
-								$elm$html$Html$button,
-								_List_fromArray(
-									[
-										$elm$html$Html$Events$onClick($author$project$Page$ListWarnings$ClickUser)
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('User Created Warnings')
-									]))
-							])),
+						$author$project$Page$ListWarnings$viewMenu,
 						$author$project$Page$ListWarnings$viewWarnings(warnings)
 					]));
 		default:
@@ -7687,12 +7716,22 @@ var $author$project$Page$ListWarnings$view = function (model) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('center')
+						$elm$html$Html$Attributes$class('warning-body')
 					]),
 				_List_fromArray(
 					[
-						$author$project$Error$view(
-						$author$project$Error$toString(e))
+						$author$project$Page$ListWarnings$viewMenu,
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('center')
+							]),
+						_List_fromArray(
+							[
+								$author$project$Error$view(
+								$author$project$Error$toString(e))
+							]))
 					]));
 	}
 };
@@ -7867,7 +7906,25 @@ var $author$project$Page$NewWarning$view = function (model) {
 	var _v0 = model.B;
 	switch (_v0.$) {
 		case 1:
-			return $elm$html$Html$text('');
+			return A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('center')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$h2,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('loading')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Loading...')
+							]))
+					]));
 		case 0:
 			return $author$project$Page$NewWarning$viewForm(model);
 		case 2:
@@ -7966,7 +8023,16 @@ var $author$project$Main$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('')
+								A2(
+								$elm$html$Html$h2,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('loading')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Loading...')
+									]))
 							]))
 					]));
 		case 2:

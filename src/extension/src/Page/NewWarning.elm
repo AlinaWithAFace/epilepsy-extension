@@ -34,7 +34,9 @@ view : Model -> Html Msg
 view model =
     case model.response of
         RemoteData.Loading ->
-            text ""
+            div [ class "center" ]
+                [ h2 [ class "loading" ] [ text "Loading..." ]
+                ]
 
         RemoteData.NotAsked ->
             viewForm model

@@ -39,6 +39,14 @@ menu {
   border: 1px solid #C6E6D2;
 }
 
+.loading {
+  border: 1px solid #C0C0C0;
+  color: #6B6B6B;
+  background-color: #EEEEEE;
+  text-align: center;
+  max-width:30rem;
+}
+
 .error {
   border: 1px solid #ECD1CA;
   color: #D46150;
