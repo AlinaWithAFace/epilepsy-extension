@@ -17,7 +17,6 @@ import Http
 import Json.Encode as Encode
 import RemoteData exposing (WebData)
 import Time exposing (Time)
-import Warning exposing (Warning)
 
 
 type alias Model =
@@ -170,6 +169,11 @@ update msg model =
         _ ->
             ( model, Cmd.none )
 
+type alias Warning =
+  { start : Time
+  , stop : Time
+  , description : String
+  }
 
 createWarning : Path -> Warning -> Cmd Msg
 createWarning path warning =
