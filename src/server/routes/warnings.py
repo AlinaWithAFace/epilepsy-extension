@@ -183,5 +183,7 @@ def generate_warnings(video_id):
             commit=True,
         )
         return Response(status=http.HTTPStatus.CREATED)
+    if row['video_screening_status'] == "COMPLETED":
+        return Response(status=http.HTTPStatus.OK)
     else:
         return Response(status=http.HTTPStatus.BAD_REQUEST)
