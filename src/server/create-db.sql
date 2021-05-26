@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS Videos (
     video_id INTEGER PRIMARY KEY AUTOINCREMENT,
     video_vid TEXT NOT NULL UNIQUE,
-    video_duration INTEGER NOT NULL UNIQUE,
+    video_duration INTEGER NOT NULL,
     video_title TEXT NOT NULL,
     video_data_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     video_screening_status CHECK( video_screening_status IN ("STARTED",
